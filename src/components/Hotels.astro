@@ -1,0 +1,69 @@
+---
+import type { Locale } from '../i18n/config'
+import { routes } from '../i18n/config'
+import { t } from '../i18n/ui'
+import Placeholder from './Placeholder.astro'
+
+interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
+const { locale, accentColour = 'turquoise' } = Astro.props
+const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
+
+const base = `/${locale}/${(routes['accommodation'] as any)[locale] ?? 'unterkunft'}`
+
+const hotels = [
+  { id:'nove', name:'Nové Lázně', tier: locale==='de'?'Königliches Erbe':locale==='cs'?'Královské dědictví':locale==='ru'?'Королевское наследие':'Royal heritage', desc: locale==='de'?'Neorenaissance-Pracht an der Hauptpromenade. Das Royal-Kabinett Eduards VII. ist erhalten; der eisenreiche Rudolf-Quell entspringt im Keller.':locale==='cs'?'Novorenesanční nádhera na hlavní promenádě. Královský kabinet Eduarda VII. zachován; železitý Rudolfův pramen pramení v suterénu.':locale==='ru'?'Неоренессансное великолепие на главной набережной. Королевский кабинет Эдуарда VII сохранён; железистый Рудольфов источник бьёт в подвале.':'Neo-Renaissance grandeur on the main promenade. Edward VII\'s Royal Cabin is preserved; the iron-rich Rudolph spring rises in the basement.', price:215, tags:['Medical spa','Historic'], tone:'colonnade' as const },
+  { id:'centralni', name:'Centrální Lázně', tier:locale==='de'?'An der Kolonnade':locale==='cs'?'U Kolonády':locale==='ru'?'У Колоннады':'At the Colonnade', desc:locale==='de'?'Das älteste Kurhaus der Stadt, direkt mit der Kreuzquell-Kolonnade verbunden.':locale==='cs'?'Nejstarší lázeňský dům ve městě, přímo propojený s Kolonádou Křížového pramene.':locale==='ru'?'Старейший курортный дом города, непосредственно связан с Колоннадой Крестового источника.':'The oldest spa house, connected directly to the Cross Spring Colonnade. Rooms face the park.', price:165, tags:['Thermal baths','Central'], tone:'water' as const },
+  { id:'hvezda', name:'Hvězda', tier:locale==='de'?'Klassisches Ensemble':locale==='cs'?'Klasický komplex':locale==='ru'?'Классический ансамбль':'Classical cluster', desc:locale==='de'?'Drei verbundene Häuser mit eigenen medizinischen Einrichtungen und dem größten Hallenbad an der Promenade.':locale==='cs'?'Tři propojené domy s vlastními léčebnými zařízeními a největším vnitřním bazénem na promenádě.':locale==='ru'?'Три соединённых дома с собственными медицинскими учреждениями и крупнейшим крытым бассейном.':'Three connected houses with on-site medical facilities and the largest indoor pool on the promenade.', price:145, tags:['Family','Pool'], tone:'mineral' as const },
+  { id:'pacifik', name:'Pacifik', tier:locale==='de'?'Ruhiger Gartenflügel':locale==='cs'?'Tichý zahradní trakt':locale==='ru'?'Тихое садовое крыло':'Quiet garden wing', desc:locale==='de'?'Ein günstigerer Einstieg ins Ensana-Programm — gleiche ärztliche Begleitung, ruhigere Zimmer zum Garten.':locale==='cs'?'Dostupnější vstup do programu Ensana — stejný lékařský dohled, tišší pokoje do zahrady.':locale==='ru'?'Более доступный вход в программу Ensana — тот же медицинский надзор, тихие садовые номера.':'A more affordable entry into an Ensana programme — same medical supervision, quieter garden-facing rooms.', price:119, tags:['Value','Garden'], tone:'forest' as const },
+]
+---
+<section style="padding:110px 80px;background:#F6F1E8;">
+  <div style="display:grid;grid-template-columns:1fr auto;align-items:end;margin-bottom:48px;">
+    <div style="max-width:720px;">
+      <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:18px;">
+        {t(locale, 'home.stay.eyebrow')}
+      </div>
+      <h2 style="font-size:clamp(36px,5vw,56px);font-weight:700;color:#004F71;line-height:1.02;letter-spacing:-0.012em;margin:0;">
+        {t(locale, 'home.stay.title')}
+      </h2>
+      <p style="font-size:17px;font-weight:350;color:#33728D;line-height:1.55;margin-top:22px;max-width:560px;">
+        {t(locale, 'home.stay.body')}
+      </p>
+    </div>
+    <a href={base} style="color:#004F71;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:4px;white-space:nowrap;">
+      {t(locale, 'home.stay.all')}
+    </a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;">
+    {hotels.map(h => (
+      <a href={`${base}/hotel/${h.id}`} class="card-hover" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,79,113,0.08);display:flex;flex-direction:column;cursor:pointer;">
+        <div style="height:240px;position:relative;">
+          <Placeholder label={h.name} tone={h.tone} />
+          <div style="position:absolute;top:14px;left:14px;padding:4px 10px;background:rgba(255,255,255,0.92);border-radius:2px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#004F71;font-weight:700;">
+            {h.tier}
+          </div>
+        </div>
+        <div style="padding:22px 24px 24px;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#33728D;font-weight:700;">
+            Mariánské Lázně · Ensana
+          </div>
+          <div style="font-size:26px;font-weight:700;color:#004F71;line-height:1.1;margin:4px 0 8px;">{h.name}</div>
+          <p style="font-size:14px;color:#33728D;font-weight:500;line-height:1.5;margin:0;flex:1;">{h.desc}</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;">
+            {h.tags.map(tag => (
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.05em;padding:3px 10px;border-radius:999px;background:#E8F6FA;color:#004F71;">{tag}</span>
+            ))}
+          </div>
+          <div style="margin-top:18px;padding-top:14px;border-top:1px solid #CCDCE3;display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-size:18px;font-weight:700;color:#004F71;">
+              {t(locale,'hotel.from')} €{h.price} <small style="font-size:11px;font-weight:500;color:#6695AA;">{t(locale,'hotel.pernight')}</small>
+            </div>
+            <div style={`color:#004F71;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:${accent};`}>
+              {t(locale,'hotel.book')}
+            </div>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

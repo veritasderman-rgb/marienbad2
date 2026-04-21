@@ -1,0 +1,33 @@
+---
+import type { Locale } from '../i18n/config'
+import { routes } from '../i18n/config'
+import { t } from '../i18n/ui'
+import Placeholder from './Placeholder.astro'
+
+interface Props { locale: Locale }
+const { locale } = Astro.props
+
+const items = [
+  { title: '40+',        sub: t(locale, 'quickfacts.springs'),   href: `/${locale}/${(routes['mineral-springs'] as any)[locale]}`, tone: 'water' as const },
+  { title: 'Cast-iron',  sub: t(locale, 'quickfacts.colonnade'), href: `/${locale}/${(routes['history'] as any)[locale]}`,         tone: 'colonnade' as const },
+  { title: '400 ha',     sub: t(locale, 'quickfacts.park'),      href: `/${locale}/${(routes['things-to-do'] as any)[locale]}`,    tone: 'forest' as const },
+  { title: 'Royal',      sub: t(locale, 'quickfacts.golf'),      href: `/${locale}/${(routes['things-to-do'] as any)[locale]}`,    tone: 'warm' as const },
+]
+---
+<section style="padding:56px 80px 0;background:#FAF6EE;">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+    {items.map(it => (
+      <a href={it.href} class="card-hover" style="background:#fff;padding:22px 22px 20px;border-radius:8px;box-shadow:0 2px 6px rgba(0,79,113,0.08);display:flex;flex-direction:column;gap:0;cursor:pointer;">
+        <div style="height:88px;border-radius:4px;overflow:hidden;margin-bottom:16px;position:relative;">
+          <Placeholder tone={it.tone} />
+        </div>
+        <div style="font-size:26px;font-weight:700;color:#004F71;line-height:1;">{it.title}</div>
+        <div style="font-size:13px;color:#33728D;margin-top:6px;font-weight:500;">{it.sub}</div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #CCDCE3;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#004F71;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+          {it.sub}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

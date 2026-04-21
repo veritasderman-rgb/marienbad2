@@ -1,0 +1,76 @@
+---
+import type { Locale } from '../i18n/config'
+import { routes } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props { locale: Locale }
+const { locale } = Astro.props
+
+const cols = [
+  {
+    key: 'footer.col.town',
+    links: [
+      { label: t(locale, 'nav.springs'), href: `/${locale}/${(routes['mineral-springs'] as any)[locale] ?? ''}` },
+      { label: t(locale, 'nav.todo'),    href: `/${locale}/${(routes['things-to-do'] as any)[locale] ?? ''}` },
+      { label: t(locale, 'nav.town'),    href: `/${locale}/${(routes['history'] as any)[locale] ?? ''}` },
+    ],
+  },
+  {
+    key: 'footer.col.programmes',
+    links: [
+      { label: locale === 'de' ? 'Mineralquellenkur' : locale === 'cs' ? 'Kúra minerálními prameny' : locale === 'ru' ? 'Кура с минеральными источниками' : 'Mineral spring cure', href: `/${locale}/${(routes['mineral-springs'] as any)[locale] ?? ''}` },
+      { label: locale === 'de' ? 'CO₂-Bad' : locale === 'cs' ? 'Suchá CO₂ koupel' : locale === 'ru' ? 'Углекислая ванна' : 'Carbon dioxide bath', href: `/${locale}/${(routes['mineral-springs'] as any)[locale] ?? ''}` },
+      { label: locale === 'de' ? 'Peloidtherapie' : locale === 'cs' ? 'Peloidní terapie' : locale === 'ru' ? 'Пелоидотерапия' : 'Peloid therapy', href: `/${locale}/${(routes['mineral-springs'] as any)[locale] ?? ''}` },
+    ],
+  },
+  {
+    key: 'footer.col.stay',
+    links: [
+      { label: 'Nové Lázně', href: `/${locale}/${(routes['accommodation'] as any)[locale] ?? ''}/hotel/nove-lazne` },
+      { label: 'Centrální Lázně', href: `/${locale}/${(routes['accommodation'] as any)[locale] ?? ''}/hotel/centralni-lazne` },
+      { label: 'Hvězda', href: `/${locale}/${(routes['accommodation'] as any)[locale] ?? ''}/hotel/hvezda` },
+      { label: 'Pacifik', href: `/${locale}/${(routes['accommodation'] as any)[locale] ?? ''}/hotel/pacifik` },
+    ],
+  },
+  {
+    key: 'footer.col.practical',
+    links: [
+      { label: locale === 'de' ? 'Anreise' : locale === 'cs' ? 'Jak se dostat' : locale === 'ru' ? 'Как добраться' : 'Getting here', href: `/${locale}/${(routes['practical-info'] as any)[locale] ?? ''}` },
+      { label: locale === 'de' ? 'Magazin' : locale === 'cs' ? 'Magazín' : locale === 'ru' ? 'Журнал' : 'Magazine', href: `/${locale}/${(routes['magazine'] as any)[locale] ?? ''}` },
+    ],
+  },
+]
+---
+<footer style="background:#003A56;color:#fff;padding:64px 80px 36px;">
+  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.15);">
+    <!-- Brand column -->
+    <div>
+      <div style="font-size:24px;font-weight:700;letter-spacing:-0.01em;">
+        marienbad<span style="color:#8BD3E6;">.</span>com
+      </div>
+      <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8BD3E6;font-weight:700;margin-top:16px;">
+        {t(locale, 'footer.tagline')}
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.72);margin-top:14px;line-height:1.55;max-width:260px;">
+        {t(locale, 'footer.desc')}
+      </p>
+    </div>
+    <!-- Nav columns -->
+    {cols.map(col => (
+      <div>
+        <div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#8BD3E6;font-weight:700;margin-bottom:14px;">
+          {t(locale, col.key as any)}
+        </div>
+        <div style="font-size:13px;line-height:2.1;color:rgba(255,255,255,0.82);">
+          {col.links.map(link => (
+            <a href={link.href} style="display:block;color:inherit;">{link.label}</a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <div style="margin-top:32px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.6);">
+    <div>{t(locale, 'footer.copy')}</div>
+    <div>{t(locale, 'footer.ensana')}</div>
+  </div>
+</footer>

@@ -1,0 +1,58 @@
+---
+import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
+const { locale, accentColour = 'turquoise' } = Astro.props
+const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
+
+const items = locale === 'de' ? [
+  { ey:'TRINKKUR', name:'Mineralquellen-Programm', body:'Verschriebene Gläser aus Rudolf-, Kreuz- und Waldquell, zeitlich über den Tag verteilt.', dur:'6–21 Tage', price:'ab €320' },
+  { ey:'BALNEOLOGIE', name:'CO₂-Trockenbad', body:'Zwanzig überwachte Minuten in warmem CO₂-Gas — die böhmische Spezialität für die Durchblutung.', dur:'20 Min', price:'€42' },
+  { ey:'PELOID', name:'Torfpackung', body:'Lokales Peloid, erhitzt und auf Gelenke oder den unteren Rücken aufgebracht.', dur:'25 Min', price:'€58' },
+  { ey:'MEDIZIN', name:'Ärztliche Konsultation', body:'Vollständige Untersuchung bei einem unserer Oberärzte. Jedes Programm beginnt hier.', dur:'45 Min', price:'€95' },
+] : locale === 'cs' ? [
+  { ey:'PITNÁ KÚRA', name:'Program minerálních pramenů', body:'Předepsané sklenky z pramenů Rudolf, Křížový a Lesní, rozložené přes celý den.', dur:'6–21 dní', price:'od €320' },
+  { ey:'BALNEOLOGIE', name:'CO₂ suchá koupel', body:'Dvacet řízených minut v teplém CO₂ — česká specialita pro zlepšení oběhu.', dur:'20 min', price:'€42' },
+  { ey:'PELOID', name:'Rašelinový zábal', body:'Místní peloid, ohřátý a přiložený na klouby nebo záda.', dur:'25 min', price:'€58' },
+  { ey:'MEDICÍNA', name:'Lékařská konzultace', body:'Kompletní vyšetření u jednoho z našich primářů. Každý program začíná zde.', dur:'45 min', price:'€95' },
+] : locale === 'ru' ? [
+  { ey:'ПИТЬЕВОЙ КУРС', name:'Программа минеральных источников', body:'Стаканы из источников Рудольф, Крест и Лесной по расписанию в течение дня.', dur:'6–21 день', price:'от €320' },
+  { ey:'БАЛЬНЕОЛОГИЯ', name:'Сухая CO₂ ванна', body:'Двадцать минут в тёплом CO₂ — богемская специальность для улучшения кровообращения.', dur:'20 мин', price:'€42' },
+  { ey:'ПЕЛОИД', name:'Торфяная аппликация', body:'Местный пелоид, нагретый и нанесённый на суставы или поясницу.', dur:'25 мин', price:'€58' },
+  { ey:'МЕДИЦИНА', name:'Консультация врача', body:'Полный осмотр у одного из наших старших врачей. Любая программа начинается здесь.', dur:'45 мин', price:'€95' },
+] : [
+  { ey:'DRINKING CURE', name:'Mineral spring programme', body:'Prescribed glassfuls from the Rudolph, Cross and Forest springs, timed through the day.', dur:'6–21 days', price:'from €320' },
+  { ey:'BALNEOLOGY', name:'Carbon dioxide dry bath', body:'Twenty supervised minutes in warm CO₂ gas — the Bohemian speciality for circulation.', dur:'20 min', price:'€42' },
+  { ey:'PELOID', name:'Peat pack application', body:'Local peloid, heated and applied to joints or the lower back. Followed by half an hour of rest.', dur:'25 min', price:'€58' },
+  { ey:'MEDICAL', name:"Doctor's consultation", body:"A full assessment with one of our senior doctors. Every programme begins here.", dur:'45 min', price:'€95' },
+]
+---
+<section style="padding:110px 80px;background:#FAF6EE;">
+  <div style="max-width:720px;margin-bottom:56px;">
+    <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:18px;">
+      {t(locale, 'home.treatments.eyebrow')}
+    </div>
+    <h2 style="font-size:clamp(36px,5vw,56px);font-weight:700;color:#004F71;line-height:1.02;letter-spacing:-0.012em;margin:0;">
+      <span set:html={t(locale, 'home.treatments.title').replace('keep', `<em style="font-style:italic;color:${accent};font-weight:700;">keep</em>`).replace('behalten', `<em style="font-style:italic;color:${accent};">behalten</em>`).replace('zůstane', `<em style="font-style:italic;color:${accent};">zůstane</em>`).replace('остаются', `<em style="font-style:italic;color:${accent};">остаются</em>`)} />
+    </h2>
+    <p style="font-size:17px;font-weight:350;color:#33728D;line-height:1.55;margin-top:22px;">
+      {t(locale, 'home.treatments.body')}
+    </p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid #CCDCE3;">
+    {items.map((it, i) => (
+      <div style={`padding:32px 28px 36px;border-right:${i<3?'1px solid #CCDCE3':'none'};border-bottom:1px solid #CCDCE3;`}>
+        <div style="font-size:11px;letter-spacing:0.18em;color:#33728D;font-weight:700;">{it.ey}</div>
+        <h3 style="font-size:22px;font-weight:700;color:#004F71;margin:14px 0 12px;line-height:1.2;">{it.name}</h3>
+        <p style="font-size:14px;color:#33728D;font-weight:500;line-height:1.55;margin:0;">{it.body}</p>
+        <div style="margin-top:22px;display:flex;justify-content:space-between;font-size:12px;color:#004F71;font-weight:600;">
+          <span>{it.dur}</span><span>{it.price}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+  <div style="margin-top:36px;font-size:13px;color:#6695AA;font-weight:500;line-height:1.5;max-width:680px;">
+    {t(locale, 'treatments.disclaimer')}
+  </div>
+</section>

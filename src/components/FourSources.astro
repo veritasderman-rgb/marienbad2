@@ -1,0 +1,57 @@
+---
+import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
+const { locale, accentColour = 'turquoise' } = Astro.props
+const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
+
+const sources = locale === 'de' ? [
+  { num:'01', name:'Mineralquellen', body:'Über vierzig benannte Quellen entspringen hier — jede mit eigenem Mineralprofil. Trinkkuren beginnen an der Kolonnade.', note:'Rudolf · Kreuz · Ambrosius · Wald' },
+  { num:'02', name:'Natürliches CO₂-Gas', body:'Trockene Kohlendioxidbäder verbessern die Durchblutung. Eine böhmische Balneologie-Spezialität seit dem 19. Jahrhundert.', note:'Indikation: periphere Durchblutung' },
+  { num:'03', name:'Peloid & Moor', body:'Lokale Torfpackungen, erhitzt und in überwachten Sitzungen angewendet — für Gelenk- und Rückenbeschwerden.', note:'Indikation: Bewegungsapparat' },
+  { num:'04', name:'Klima & Wald', body:'Klimatischer Kurort seit 2023. Das bewaldete Becken filtert die Luft und speichert Mineralaerosole.', note:'400 ha · Kurpark + Wald' },
+] : locale === 'cs' ? [
+  { num:'01', name:'Minerální prameny', body:'Přes čtyřicet pojmenovaných pramenů s vlastním minerálním složením. Léčebné pitné kúry začínají u Kolonády.', note:'Rudolf · Křížový · Ambrož · Lesní' },
+  { num:'02', name:'Přírodní CO₂ plyn', body:'Suché uhličité koupele zlepšují oběhový systém. Specialita české balneologie od 19. století.', note:'Indikace: periferní oběh' },
+  { num:'03', name:'Peloid & rašelina', body:'Místní rašelinové zábaly pro kloubní a zádové obtíže, podané pod lékařským dohledem.', note:'Indikace: pohybový aparát' },
+  { num:'04', name:'Klima & les', body:'Klimatické lázně od roku 2023. Zalesněná kotlina filtruje vzduch a zachycuje minerální aerosoly.', note:'400 ha · lázeňský park + les' },
+] : locale === 'ru' ? [
+  { num:'01', name:'Минеральные источники', body:'Более сорока именованных источников с уникальным минеральным составом. Питьевые курсы начинаются у Колоннады.', note:'Рудольф · Крест · Амвросий · Лесной' },
+  { num:'02', name:'Природный CO₂ газ', body:'Сухие углекислые ванны улучшают кровообращение. Специальность богемской бальнеологии с XIX века.', note:'Показание: периферическое кровообращение' },
+  { num:'03', name:'Пелоид и торф', body:'Местные торфяные аппликации для суставов и позвоночника под медицинским контролем.', note:'Показание: опорно-двигательный аппарат' },
+  { num:'04', name:'Климат и лес', body:'Климатический курорт с 2023 года. Лесная котловина фильтрует воздух и сохраняет минеральные аэрозоли.', note:'400 га · парк + лес' },
+] : [
+  { num:'01', name:'Mineral springs', body:'Over forty named springs rise here — each with its own mineral profile. Prescribed drinking cures begin at the Colonnade.', note:'Rudolph · Cross · Ambrose · Forest' },
+  { num:'02', name:'Natural CO₂ gas', body:'Dry carbon-dioxide baths improve circulation. A speciality of Bohemian balneology since the 19th century.', note:'Indication: peripheral circulation' },
+  { num:'03', name:'Peloid & mud', body:'Local peat packs, heated and applied in monitored sessions — for joint pain and post-operative recovery.', note:'Indication: musculoskeletal' },
+  { num:'04', name:'Climate & forest', body:'A climatic spa since 2023. The wooded basin traps mineral aerosols and filters the air. Walks are part of the programme.', note:'400 ha · spa park + forest' },
+]
+---
+<section id="sources" style="background:#004F71;color:#fff;padding:110px 80px;">
+  <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:72px;align-items:start;">
+    <div style="position:sticky;top:120px;">
+      <div style={`font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:${accent};font-weight:700;margin-bottom:22px;`}>
+        {t(locale, 'home.sources.eyebrow')}
+      </div>
+      <h2 style="font-size:clamp(42px,5vw,64px);font-weight:700;line-height:0.98;letter-spacing:-0.012em;margin:0;">
+        {t(locale, 'home.sources.title')}
+      </h2>
+      <p style="font-size:17px;font-weight:350;line-height:1.55;color:rgba(255,255,255,0.78);margin-top:24px;max-width:420px;">
+        {t(locale, 'home.sources.body')}
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.12);">
+      {sources.map(s => (
+        <div style="background:#004F71;padding:36px 32px 40px;min-height:260px;">
+          <div style={`font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:${accent};font-weight:700;`}>{s.num}</div>
+          <h3 style="font-size:28px;font-weight:700;margin:12px 0 14px;letter-spacing:-0.005em;">{s.name}</h3>
+          <p style="font-size:15px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.82);margin:0;">{s.body}</p>
+          <div style={`margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15);font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:${accent};font-weight:600;`}>
+            {s.note}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

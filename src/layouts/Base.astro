@@ -1,0 +1,46 @@
+---
+import '../styles/global.css'
+import type { Locale } from '../i18n/config'
+
+interface Props {
+  title: string
+  description?: string
+  locale: Locale
+  canonicalUrl?: string
+  ogImage?: string
+}
+
+const { title, description, locale, canonicalUrl, ogImage } = Astro.props
+const siteUrl = 'https://marienbad2.vercel.app'
+const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`
+const og = ogImage ?? `${siteUrl}/images/og-default.jpg`
+---
+<!doctype html>
+<html lang={locale} dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  {description && <meta name="description" content={description} />}
+  <link rel="canonical" href={canonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  {description && <meta property="og:description" content={description} />}
+  <meta property="og:image" content={og} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content={locale} />
+
+  <!-- Font preload (critical weights) -->
+  <link rel="preload" href="/fonts/Branding-Medium.otf" as="font" type="font/otf" crossorigin />
+  <link rel="preload" href="/fonts/Branding-Bold.otf" as="font" type="font/otf" crossorigin />
+  <link rel="preload" href="/fonts/Branding-Semilight.otf" as="font" type="font/otf" crossorigin />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/images/logo-ensana-indigo.svg" />
+</head>
+<body>
+  <slot />
+</body>
+</html>

@@ -1,0 +1,47 @@
+---
+import type { Locale } from '../i18n/config'
+import { locales, localeNames, routes } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props {
+  locale: Locale
+  currentPath?: string
+}
+const { locale, currentPath = '' } = Astro.props
+
+const navItems = [
+  { key: 'springs', href: `/${locale}/${(routes['mineral-springs'] as any)[locale] ?? 'mineralquellen'}` },
+  { key: 'todo',    href: `/${locale}/${(routes['things-to-do'] as any)[locale] ?? 'aktivitaeten'}` },
+  { key: 'stay',    href: `/${locale}/${(routes['accommodation'] as any)[locale] ?? 'unterkunft'}` },
+  { key: 'town',    href: `/${locale}/${(routes['history'] as any)[locale] ?? 'geschichte'}` },
+  { key: 'stories', href: `/${locale}/${(routes['people'] as any)[locale] ?? 'menschen'}` },
+] as const
+---
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:28px;padding:14px 48px;background:rgba(0,79,113,0.92);backdrop-filter:blur(8px);color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);min-width:0;">
+  <a href={`/${locale}/`} style="font-size:22px;font-weight:700;letter-spacing:-0.01em;line-height:1;color:#fff;flex-shrink:0;">
+    marienbad<span style="color:#8BD3E6;">.</span>com
+  </a>
+  <div style="width:1px;height:22px;background:rgba(255,255,255,0.18);flex-shrink:0;"></div>
+  <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:600;white-space:nowrap;">
+    {t(locale, 'nav.tagline')}
+  </div>
+  <div style="display:flex;gap:18px;margin-left:16px;flex-wrap:nowrap;overflow:hidden;">
+    {navItems.map(item => (
+      <a href={item.href} style={`color:rgba(255,255,255,${currentPath.startsWith(item.href) ? '1' : '0.82'});font-size:13px;font-weight:500;padding:6px 0;white-space:nowrap;`}>
+        {t(locale, `nav.${item.key}` as any)}
+      </a>
+    ))}
+  </div>
+  <!-- Language switcher -->
+  <div style="margin-left:auto;display:flex;gap:4px;font-size:11px;font-weight:700;letter-spacing:0.1em;flex-shrink:0;">
+    {locales.map(l => (
+      <a href={`/${l}/`} style={`padding:4px 8px;border-radius:2px;cursor:pointer;background:${l === locale ? 'rgba(255,255,255,0.18)' : 'transparent'};color:${l === locale ? '#fff' : 'rgba(255,255,255,0.6)'};`}>
+        {l.toUpperCase()}
+      </a>
+    ))}
+  </div>
+  <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#8BD3E6;color:#004F71;font-size:13px;font-weight:700;padding:10px 18px;border-radius:4px;white-space:nowrap;flex-shrink:0;">
+    {t(locale, 'nav.book')}
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</nav>

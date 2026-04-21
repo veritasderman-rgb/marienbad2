@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro'
+import Nav from '../../components/Nav.astro'
+import Hero from '../../components/Hero.astro'
+import QuickFacts from '../../components/QuickFacts.astro'
+import FourSources from '../../components/FourSources.astro'
+import Hotels from '../../components/Hotels.astro'
+import Treatments from '../../components/Treatments.astro'
+import Seasonal from '../../components/Seasonal.astro'
+import Stories from '../../components/Stories.astro'
+import BookingCta from '../../components/BookingCta.astro'
+import Footer from '../../components/Footer.astro'
+import { t } from '../../i18n/ui'
+
+const locale = 'ru'
+---
+<Base
+  title={t(locale, 'meta.home.title')}
+  description={t(locale, 'meta.home.desc')}
+  locale={locale}
+>
+  <Nav locale={locale} currentPath="/ru/" />
+  <main>
+    <Hero locale={locale} variant="fullbleed" accentColour="turquoise" />
+    <QuickFacts locale={locale} />
+    <FourSources locale={locale} accentColour="turquoise" />
+    <Hotels locale={locale} accentColour="turquoise" />
+    <Treatments locale={locale} accentColour="turquoise" />
+    <Seasonal locale={locale} accentColour="turquoise" />
+    <Stories locale={locale} accentColour="turquoise" />
+    <BookingCta locale={locale} accentColour="turquoise" />
+  </main>
+  <Footer locale={locale} />
+</Base>
