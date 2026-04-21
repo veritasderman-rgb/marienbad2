@@ -19,7 +19,7 @@ const { Content } = await entry.render()
 const crumbs = [
   { label: 'Startseite', href: '/de/' },
   { label: 'Menschen', href: '/de/menschen' },
-  { label: entry.data.personName ?? entry.data.title },
+  { label: entry.data.name ?? entry.data.personName ?? entry.data.title },
 ]
 ---
 <Base title={entry.data.title} locale={locale}>
@@ -34,7 +34,7 @@ const crumbs = [
         </blockquote>
       )}
       <h1 style="font-size:clamp(28px,4vw,48px);font-weight:700;color:#004F71;line-height:1.1;margin:0 0 8px;">
-        {entry.data.personName ?? entry.data.title}
+        {entry.data.name ?? entry.data.personName ?? entry.data.title}
       </h1>
       {entry.data.location && (
         <p style="font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#6695AA;font-weight:600;margin:0 0 32px;">
