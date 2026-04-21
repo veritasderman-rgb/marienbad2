@@ -1,7 +1,48 @@
 ---
-import PillarPage from '../../components/PillarPage.astro'
+import { getCollection } from 'astro:content'
+import type { Locale } from '../../i18n/config'
+import Base from '../../layouts/Base.astro'
+import Nav from '../../components/Nav.astro'
+import Footer from '../../components/Footer.astro'
+import BookingCtaBar from '../../components/BookingCtaBar.astro'
+
+const locale: Locale = 'de'
+const stories = await getCollection('stories', (e) => e.data.locale === 'de' && e.data.status === 'published')
 ---
-<PillarPage locale="de" title="Menschen" eyebrow="Menschen" coverTone="warm"
-  breadcrumbs={[{label:'de',href:'/de/'},{label:'Menschen'}]}>
-  <p>Příběhy hostů. / Guest stories.</p>
-</PillarPage>
+<Base title="Menschen – Marienbad" description="Gäste erzählen von ihren Erfahrungen in Marienbad und den Ensana Hotels." locale={locale}>
+  <Nav locale={locale} />
+
+  <header style="background:#0F3B52;color:#fff;padding:80px 80px 64px;">
+    <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#8BD3E6;font-weight:700;margin-bottom:16px;">Menschen</div>
+    <h1 style="font-size:clamp(32px,5vw,64px);font-weight:700;line-height:1.05;letter-spacing:-0.01em;margin:0 0 16px;">Ihre Geschichten</h1>
+    <p style="font-size:18px;color:rgba(255,255,255,0.75);font-weight:350;max-width:520px;margin:0;">Gäste aus aller Welt erzählen von ihrer Zeit in Marienbad.</p>
+  </header>
+
+  <section style="background:#FAF6EE;padding:64px 80px 96px;">
+    {stories.length === 0 ? (
+      <p style="color:#6695AA;font-size:15px;">Keine Geschichten vorhanden.</p>
+    ) : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:32px;">
+        {stories.map((story) => (
+          <a href={`/de/menschen/${story.slug.replace(/^de-/, '')}`}
+             style="display:block;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,79,113,0.08);text-decoration:none;padding:32px;"
+             onmouseover="this.style.boxShadow='0 4px 20px rgba(0,79,113,0.16)'"
+             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,79,113,0.08)'">
+            {story.data.quote && (
+              <p style="font-size:16px;color:#004F71;font-style:italic;line-height:1.5;margin:0 0 20px;">
+                &ldquo;{story.data.quote.slice(0, 120)}{story.data.quote.length > 120 ? '…' : ''}&rdquo;
+              </p>
+            )}
+            <div style="font-size:15px;font-weight:700;color:#004F71;margin-bottom:4px;">{story.data.personName ?? story.data.title}</div>
+            {story.data.location && (
+              <div style="font-size:12px;color:#6695AA;letter-spacing:0.1em;text-transform:uppercase;">{story.data.location}</div>
+            )}
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <BookingCtaBar locale={locale} />
+  <Footer locale={locale} />
+</Base>

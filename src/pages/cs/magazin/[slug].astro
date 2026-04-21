@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content'
+import type { Locale } from '../../../i18n/config'
+import Base from '../../../layouts/Base.astro'
+import Nav from '../../../components/Nav.astro'
+import Footer from '../../../components/Footer.astro'
+import Breadcrumbs from '../../../components/Breadcrumbs.astro'
+import BookingCtaBar from '../../../components/BookingCtaBar.astro'
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', (e) => e.data.locale === 'cs')
+  return articles.map((entry) => ({ params: { slug: entry.slug.replace(/^cs-/, '') }, props: { entry } }))
+}
+
+const { entry } = Astro.props
+const locale: Locale = 'cs'
+const { Content } = await entry.render()
+const crumbs = [
+  { label: 'Domů', href: '/cs/' },
+  { label: 'Magazín', href: '/cs/magazin' },
+  { label: entry.data.title },
+]
+---
+<Base title={entry.data.metaTitle ?? entry.data.title} description={entry.data.metaDescription ?? entry.data.excerpt} locale={locale}>
+  <Nav locale={locale} />
+  <Breadcrumbs crumbs={crumbs} />
+
+  <article style="background:#FAF6EE;padding:64px 80px 96px;max-width:860px;margin:0 auto;">
+    {entry.data.category && (
+      <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:16px;">
+        {entry.data.category}
+      </div>
+    )}
+    <h1 style="font-size:clamp(28px,4vw,52px);font-weight:700;color:#004F71;line-height:1.1;margin:0 0 24px;">
+      {entry.data.title}
+    </h1>
+    {entry.data.excerpt && (
+      <p style="font-size:18px;color:#33728D;line-height:1.6;margin:0 0 40px;font-weight:350;">{entry.data.excerpt}</p>
+    )}
+    <div class="prose-marienbad">
+      <Content />
+    </div>
+  </article>
+
+  <BookingCtaBar locale={locale} />
+  <Footer locale={locale} />
+</Base>
