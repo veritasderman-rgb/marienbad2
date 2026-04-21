@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props { locale: Locale }
+const { locale } = Astro.props
+---
+<div style="background:#004F71;color:#fff;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+  <p style="font-size:15px;font-weight:350;color:rgba(255,255,255,0.9);margin:0;">
+    {t(locale, 'home.cta.body')}
+  </p>
+  <a href="https://www.ensanahotels.com" target="_blank" rel="noopener"
+     style="display:inline-flex;align-items:center;gap:8px;background:#8BD3E6;color:#004F71;font-size:13px;font-weight:700;padding:12px 20px;border-radius:4px;white-space:nowrap;flex-shrink:0;">
+    {t(locale, 'home.cta.btn1')}
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
+  </a>
+</div>

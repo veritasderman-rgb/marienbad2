@@ -1,0 +1,73 @@
+---
+import type { Locale } from '../i18n/config'
+import Base from '../layouts/Base.astro'
+import Nav from './Nav.astro'
+import Footer from './Footer.astro'
+import Breadcrumbs from './Breadcrumbs.astro'
+import BookingCtaBar from './BookingCtaBar.astro'
+import Placeholder from './Placeholder.astro'
+
+interface Props {
+  locale: Locale
+  title: string
+  description?: string
+  eyebrow?: string
+  coverTone?: 'colonnade' | 'water' | 'mineral' | 'forest' | 'warm' | 'default'
+  breadcrumbs?: Array<{ label: string; href?: string }>
+}
+
+const {
+  locale,
+  title,
+  description,
+  eyebrow,
+  coverTone = 'colonnade',
+  breadcrumbs = [],
+} = Astro.props
+---
+<Base title={title} description={description} locale={locale}>
+  <Nav locale={locale} />
+  {breadcrumbs.length > 0 && <Breadcrumbs crumbs={breadcrumbs} />}
+
+  <!-- Hero strip -->
+  <header style="position:relative;height:320px;overflow:hidden;">
+    <Placeholder tone={coverTone} style="position:absolute;inset:0;height:100%;" />
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,79,113,0.6) 0%,rgba(0,79,113,0.3) 100%);"></div>
+    <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 80px 48px;">
+      {eyebrow && (
+        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#8BD3E6;font-weight:700;margin-bottom:12px;">
+          {eyebrow}
+        </div>
+      )}
+      <h1 style="font-size:clamp(32px,5vw,64px);font-weight:700;color:#fff;line-height:1.05;letter-spacing:-0.01em;margin:0;">
+        {title}
+      </h1>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div style="background:#FAF6EE;padding:64px 80px 96px;display:grid;grid-template-columns:1fr 280px;gap:64px;align-items:start;max-width:1400px;margin:0 auto;">
+    <article class="prose-marienbad">
+      <slot />
+    </article>
+    <!-- Sidebar -->
+    <aside style="position:sticky;top:100px;">
+      <div style="background:#fff;border-radius:8px;padding:24px;box-shadow:0 2px 6px rgba(0,79,113,0.08);">
+        <div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:16px;">
+          {locale === 'de' ? 'Ensana Hotels' : locale === 'cs' ? 'Hotely Ensana' : locale === 'ru' ? 'Отели Ensana' : 'Ensana Hotels'}
+        </div>
+        <p style="font-size:13px;color:#33728D;line-height:1.5;margin:0 0 16px;">
+          {locale === 'de' ? 'Vier Hotels an der Promenade mit gemeinsamen Ärzten, Pools und Küchen.' : locale === 'cs' ? 'Čtyři hotely na promenádě se společnými lékaři, bazény a kuchyní.' : locale === 'ru' ? 'Четыре отеля на набережной с общими врачами, бассейнами и кухней.' : 'Four hotels on the promenade with shared doctors, pools and kitchens.'}
+        </p>
+        <a href="https://www.ensanahotels.com" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;justify-content:space-between;background:#004F71;color:#fff;font-size:13px;font-weight:700;padding:12px 16px;border-radius:4px;">
+          {locale === 'de' ? 'Jetzt buchen' : locale === 'cs' ? 'Rezervovat' : locale === 'ru' ? 'Забронировать' : 'Book now'}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  <BookingCtaBar locale={locale} />
+  <Footer locale={locale} />
+</Base>
