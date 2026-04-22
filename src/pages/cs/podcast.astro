@@ -1,7 +1,19 @@
 ---
-import PillarPage from '../../components/PillarPage.astro'
+import Base from '../../layouts/Base.astro'
+import Nav from '../../components/Nav.astro'
+import Footer from '../../components/Footer.astro'
+import BookingCtaBar from '../../components/BookingCtaBar.astro'
+import PodcastPage from '../../components/PodcastPage.astro'
+
+const locale = 'cs' as const
 ---
-<PillarPage locale="cs" title="Podcast" eyebrow="Magazín" coverTone="colonnade"
-  breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Magazín',href:'/cs/magazin'},{label:'Podcast'}]}>
-  <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>
-</PillarPage>
+<Base
+  title="Podcast z Mariánských Lázní — Video podcasty"
+  description="Video podcasty z Mariánských Lázní — rozhovory, tipy a příběhy z lázeňského města."
+  locale={locale}
+>
+  <Nav locale={locale} />
+  <PodcastPage locale={locale} />
+  <BookingCtaBar locale={locale} />
+  <Footer locale={locale} />
+</Base>
