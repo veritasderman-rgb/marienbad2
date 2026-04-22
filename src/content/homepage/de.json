@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "eyebrow": "Mariánské Lázně · Böhmen · seit 1808",
+    "title": "Heilquellen, stille Tage — ein Rhythmus, den Sie behalten.",
+    "body": "Ob Mineralquellenkur oder ein langes Wochenende im Kurpark — Mariánské Lázně gibt Ihnen Ihr Tempo zurück.",
+    "badge": "Offizieller Reiseführer Mariánské Lázně",
+    "cta1Label": "Hotel finden",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Heilquellen",
+    "cta2Url": "#sources"
+  },
+  "seasonal": {
+    "eyebrow": "Unsere Empfehlung",
+    "title": "Die Quellen warten — Ihre Kur in Mariánské Lázně.",
+    "body": "Sechs Tage ist ein Besuch. Drei Wochen ist eine Kur. Unsere Ärzte gestalten nach einer 45-minütigen Konsultation ein Programm für Sie.",
+    "cta1Label": "Kur planen",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Indikationen & Kontraindikationen",
+    "cta2Url": "/de/mineralquellen"
+  },
+  "bookingCta": {
+    "eyebrow": "Seien Sie Ihr eigener Gesundheitsmanager",
+    "title": "Finden Sie Ihr Hotel in Mariánské Lázně.",
+    "body": "Direkt buchen auf ensanahotels.com — bester Preis, beste Zimmer-Garantie und schnellster Weg zur ersten Arzttermin.",
+    "primaryCta": "Auf ensanahotels.com buchen",
+    "primaryUrl": "https://www.ensanahotels.com",
+    "secondaryCta": "Zuerst einen Arzt fragen",
+    "secondaryUrl": "/de/mineralquellen"
+  }
+}

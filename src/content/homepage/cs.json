@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "eyebrow": "Mariánské Lázně · Čechy · od roku 1808",
+    "title": "Léčivé prameny, klidné dny — rytmus, který si uchováte.",
+    "body": "Ať přijedete na wellness, minerální kúru nebo dlouhý víkend v lázeňském parku — Mariánské Lázně vám vrátí vaše tempo.",
+    "badge": "Oficiální průvodce Mariánskými Lázněmi",
+    "cta1Label": "Najít hotel",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Léčivé prameny",
+    "cta2Url": "#sources"
+  },
+  "seasonal": {
+    "eyebrow": "Naše doporučení",
+    "title": "Prameny čekají — vaše kúra v Mariánských Lázních.",
+    "body": "Šest dní je návštěva. Tři týdny je kúra. Naši lékaři sestaví program po 45minutové konzultaci.",
+    "cta1Label": "Naplánovat kúru",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Indikace a kontraindikace",
+    "cta2Url": "/cs/mineralni-prameny"
+  },
+  "bookingCta": {
+    "eyebrow": "Buďte svým vlastním manažerem zdraví",
+    "title": "Najděte svůj hotel v Mariánských Lázních.",
+    "body": "Rezervujte přímo na ensanahotels.com — nejlepší cena, záruka nejlepšího pokoje.",
+    "primaryCta": "Rezervovat na ensanahotels.com",
+    "primaryUrl": "https://www.ensanahotels.com",
+    "secondaryCta": "Nejprve se poradit s lékařem",
+    "secondaryUrl": "/cs/mineralni-prameny"
+  }
+}

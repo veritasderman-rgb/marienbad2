@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "eyebrow": "Mariánské Lázně · Czechia · since 1808",
+    "title": "Healing springs, quiet days — a rhythm you keep.",
+    "body": "Whether you come for wellness, a mineral cure or a long slow weekend in the spa park — Mariánské Lázně gives you back your tempo.",
+    "badge": "Official guide to Mariánské Lázně",
+    "cta1Label": "Find your hotel",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Healing springs",
+    "cta2Url": "#sources"
+  },
+  "seasonal": {
+    "eyebrow": "What we recommend",
+    "title": "The springs are waiting — your cure in Mariánské Lázně.",
+    "body": "Six days is a visit. Three weeks is a cure. Our doctors design a programme after a forty-five minute consultation.",
+    "cta1Label": "Plan a cure",
+    "cta1Url": "https://www.ensanahotels.com",
+    "cta2Label": "Indications & contraindications",
+    "cta2Url": "/en/mineral-springs"
+  },
+  "bookingCta": {
+    "eyebrow": "Be your own health manager",
+    "title": "Find your hotel in Mariánské Lázně.",
+    "body": "Book direct on ensanahotels.com — best price, best-room guarantee, and the shortest path to a first appointment.",
+    "primaryCta": "Book on ensanahotels.com",
+    "primaryUrl": "https://www.ensanahotels.com",
+    "secondaryCta": "Ask a doctor first",
+    "secondaryUrl": "/en/mineral-springs"
+  }
+}

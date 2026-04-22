@@ -1,4 +1,4 @@
-import { config, fields, collection } from '@keystatic/core'
+import { config, fields, collection, singleton } from '@keystatic/core'
 import { block, wrapper } from '@keystatic/core/content-components'
 
 const markdocComponents = {
@@ -240,4 +240,48 @@ export default config({
       },
     }),
   },
+  singletons: {
+    homepageDe: makeHomepageSingleton('Homepage (Deutsch)', 'de'),
+    homepageEn: makeHomepageSingleton('Homepage (English)', 'en'),
+    homepageCs: makeHomepageSingleton('Homepage (Čeština)', 'cs'),
+    homepageRu: makeHomepageSingleton('Homepage (Русский)', 'ru'),
+  },
 })
+
+function makeHomepageSingleton(label: string, locale: string) {
+  return singleton({
+    label,
+    path: `src/content/homepage/${locale}`,
+    format: { data: 'json' },
+    schema: {
+      hero: fields.object({
+        eyebrow: fields.text({ label: 'Eyebrow' }),
+        title: fields.text({ label: 'Title', multiline: true }),
+        body: fields.text({ label: 'Body', multiline: true }),
+        badge: fields.text({ label: 'Badge' }),
+        cta1Label: fields.text({ label: 'Primary CTA Label' }),
+        cta1Url: fields.text({ label: 'Primary CTA URL' }),
+        cta2Label: fields.text({ label: 'Secondary CTA Label' }),
+        cta2Url: fields.text({ label: 'Secondary CTA URL' }),
+      }, { label: 'Hero' }),
+      seasonal: fields.object({
+        eyebrow: fields.text({ label: 'Eyebrow' }),
+        title: fields.text({ label: 'Title', multiline: true }),
+        body: fields.text({ label: 'Body', multiline: true }),
+        cta1Label: fields.text({ label: 'Primary CTA Label' }),
+        cta1Url: fields.text({ label: 'Primary CTA URL' }),
+        cta2Label: fields.text({ label: 'Secondary CTA Label' }),
+        cta2Url: fields.text({ label: 'Secondary CTA URL' }),
+      }, { label: 'Seasonal block' }),
+      bookingCta: fields.object({
+        eyebrow: fields.text({ label: 'Eyebrow' }),
+        title: fields.text({ label: 'Title', multiline: true }),
+        body: fields.text({ label: 'Body', multiline: true }),
+        primaryCta: fields.text({ label: 'Primary CTA Label' }),
+        primaryUrl: fields.text({ label: 'Primary CTA URL' }),
+        secondaryCta: fields.text({ label: 'Secondary CTA Label' }),
+        secondaryUrl: fields.text({ label: 'Secondary CTA URL' }),
+      }, { label: 'Booking CTA' }),
+    },
+  })
+}

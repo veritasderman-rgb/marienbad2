@@ -11,6 +11,7 @@ import Stories from '../../components/Stories.astro'
 import BookingCta from '../../components/BookingCta.astro'
 import Footer from '../../components/Footer.astro'
 import { t } from '../../i18n/ui'
+import homepageContent from '../../content/homepage/de.json'
 
 const locale = 'de'
 ---
@@ -20,8 +21,8 @@ const locale = 'de'
   locale={locale}
 >
   <Nav locale={locale} currentPath="/de/" />
-  <main>
-    <Hero locale={locale} variant="fullbleed" accentColour="turquoise" />
+  <main id="main">
+    <Hero locale={locale} variant="fullbleed" accentColour="turquoise" content={homepageContent.hero} />
     <QuickFacts locale={locale} />
     <FourSources locale={locale} accentColour="turquoise" />
     <Hotels locale={locale} accentColour="turquoise" />

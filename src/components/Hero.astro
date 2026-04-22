@@ -3,14 +3,35 @@ import type { Locale } from '../i18n/config'
 import { t } from '../i18n/ui'
 import Placeholder from './Placeholder.astro'
 
+interface HeroContent {
+  eyebrow?: string
+  title?: string
+  body?: string
+  badge?: string
+  cta1Label?: string
+  cta1Url?: string
+  cta2Label?: string
+  cta2Url?: string
+}
+
 interface Props {
   locale: Locale
   variant?: 'fullbleed' | 'split' | 'typeled'
   accentColour?: 'turquoise' | 'yellow'
+  content?: HeroContent
 }
-const { locale, variant = 'fullbleed', accentColour = 'turquoise' } = Astro.props
+const { locale, variant = 'fullbleed', accentColour = 'turquoise', content = {} } = Astro.props
 const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
 const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
+
+const heroEyebrow = content.eyebrow ?? t(locale, 'home.hero.eyebrow')
+const heroTitle = content.title ?? t(locale, 'home.hero.title')
+const heroBody = content.body ?? t(locale, 'home.hero.body')
+const heroBadge = content.badge ?? t(locale, 'home.hero.badge')
+const heroCta1 = content.cta1Label ?? t(locale, 'home.hero.cta1')
+const heroCta1Url = content.cta1Url ?? 'https://www.ensanahotels.com'
+const heroCta2 = content.cta2Label ?? t(locale, 'home.hero.cta2')
+const heroCta2Url = content.cta2Url ?? '#sources'
 ---
 
 {variant === 'typeled' && (
@@ -18,22 +39,22 @@ const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
     <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;">
       <div>
         <div style={`font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:${accentMuted};font-weight:700;margin-bottom:18px;`}>
-          {t(locale, 'home.hero.eyebrow')}
+          {heroEyebrow}
         </div>
         <h1 style="font-size:clamp(60px,8vw,108px);font-weight:700;line-height:0.92;letter-spacing:-0.018em;color:#004F71;margin:0;">
-          {t(locale, 'home.hero.title').split(' — ').map((part, i, arr) => (
+          {heroTitle.split(' — ').map((part, i, arr) => (
             i < arr.length - 1 ? <>{part} —<br /></> : <span style={`color:${accent};`}>{part}</span>
           ))}
         </h1>
         <p style="font-size:20px;font-weight:350;line-height:1.5;color:#33728D;margin-top:28px;max-width:520px;text-wrap:pretty;">
-          {t(locale, 'home.hero.body')}
+          {heroBody}
         </p>
         <div style="display:flex;gap:14px;margin-top:36px;">
-          <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" class="btn btn-primary">
-            {t(locale, 'home.hero.cta1')}
+          <a href={heroCta1Url} target={heroCta1Url.startsWith('http') ? '_blank' : undefined} rel="noopener" class="btn btn-primary">
+            {heroCta1}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
           </a>
-          <a href="#sources" class="btn btn-ghost">{t(locale, 'home.hero.cta2')}</a>
+          <a href={heroCta2Url} class="btn btn-ghost">{heroCta2}</a>
         </div>
       </div>
       <div style="position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;">
@@ -47,19 +68,19 @@ const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
   <section style="background:#FAF6EE;display:grid;grid-template-columns:1fr 1fr;min-height:620px;">
     <div style="padding:100px 60px 80px 80px;display:flex;flex-direction:column;justify-content:center;">
       <div style={`font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:${accentMuted};font-weight:700;margin-bottom:22px;`}>
-        {t(locale, 'home.hero.eyebrow')}
+        {heroEyebrow}
       </div>
       <h1 style="font-size:clamp(48px,6vw,82px);font-weight:700;line-height:0.98;letter-spacing:-0.015em;color:#004F71;margin:0;">
-        {t(locale, 'home.hero.title')}
+        {heroTitle}
       </h1>
       <p style="font-size:18px;font-weight:350;line-height:1.55;color:#33728D;margin-top:26px;max-width:480px;">
-        {t(locale, 'home.hero.body')}
+        {heroBody}
       </p>
       <div style="display:flex;gap:12px;margin-top:34px;">
-        <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" class="btn btn-primary">
-          {t(locale, 'home.hero.cta1')}
+        <a href={heroCta1Url} target={heroCta1Url.startsWith('http') ? '_blank' : undefined} rel="noopener" class="btn btn-primary">
+          {heroCta1}
         </a>
-        <a href="#sources" class="btn btn-ghost">{t(locale, 'home.hero.cta2')}</a>
+        <a href={heroCta2Url} class="btn btn-ghost">{heroCta2}</a>
       </div>
     </div>
     <div style="position:relative;">
@@ -77,20 +98,20 @@ const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
     <div style="position:relative;padding:130px 80px 110px;max-width:980px;color:#fff;">
       <div style={`display:inline-flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.25);border-radius:999px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;`}>
         <span style={`width:6px;height:6px;border-radius:999px;background:${accent};display:inline-block;`}></span>
-        {t(locale, 'home.hero.badge')}
+        {heroBadge}
       </div>
       <h1 style="font-size:clamp(52px,7vw,92px);font-weight:700;line-height:0.98;letter-spacing:-0.015em;margin:26px 0 0;">
-        {t(locale, 'home.hero.title')}
+        {heroTitle}
       </h1>
       <p style="font-size:20px;font-weight:350;line-height:1.5;margin-top:22px;max-width:620px;text-wrap:pretty;color:rgba(255,255,255,0.9);">
-        {t(locale, 'home.hero.body')}
+        {heroBody}
       </p>
       <div style="display:flex;gap:14px;margin-top:38px;">
-        <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" class="btn btn-inverse">
-          {t(locale, 'home.hero.cta1')}
+        <a href={heroCta1Url} target={heroCta1Url.startsWith('http') ? '_blank' : undefined} rel="noopener" class="btn btn-inverse">
+          {heroCta1}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
         </a>
-        <a href="#sources" class="btn btn-ghost-inverse">{t(locale, 'home.hero.cta2')}</a>
+        <a href={heroCta2Url} class="btn btn-ghost-inverse">{heroCta2}</a>
       </div>
     </div>
     <div style="position:absolute;bottom:28px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end;color:rgba(255,255,255,0.85);font-size:12px;">
