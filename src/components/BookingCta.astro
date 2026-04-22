@@ -2,30 +2,52 @@
 import type { Locale } from '../i18n/config'
 import { t } from '../i18n/ui'
 
-interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
-const { locale, accentColour = 'turquoise' } = Astro.props
+interface BookingCtaContent {
+  eyebrow?: string
+  title?: string
+  body?: string
+  primaryCta?: string
+  primaryUrl?: string
+  secondaryCta?: string
+  secondaryUrl?: string
+}
+
+interface Props {
+  locale: Locale
+  accentColour?: 'turquoise' | 'yellow'
+  content?: BookingCtaContent
+}
+const { locale, accentColour = 'turquoise', content = {} } = Astro.props
 const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
+
+const eyebrow = content.eyebrow ?? t(locale, 'home.cta.eyebrow')
+const title = content.title ?? t(locale, 'home.cta.title')
+const body = content.body ?? t(locale, 'home.cta.body')
+const primaryCta = content.primaryCta ?? t(locale, 'home.cta.btn1')
+const primaryUrl = content.primaryUrl ?? 'https://www.ensanahotels.com'
+const secondaryCta = content.secondaryCta ?? t(locale, 'home.cta.btn2')
+const secondaryUrl = content.secondaryUrl ?? '#sources'
 ---
 <section style="background:#FAF6EE;padding:80px;">
   <div style="background:#004F71;color:#fff;border-radius:8px;padding:64px 72px;display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center;position:relative;overflow:hidden;">
     <div>
       <div style={`font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:${accent};font-weight:700;`}>
-        {t(locale, 'home.cta.eyebrow')}
+        {eyebrow}
       </div>
       <h2 style="font-size:clamp(32px,4vw,52px);font-weight:700;line-height:1.02;letter-spacing:-0.012em;margin:18px 0 0;">
-        {t(locale, 'home.cta.title')}
+        {title}
       </h2>
       <p style="font-size:16px;font-weight:350;line-height:1.55;color:rgba(255,255,255,0.82);margin-top:20px;max-width:480px;">
-        {t(locale, 'home.cta.body')}
+        {body}
       </p>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" class="btn btn-inverse" style="width:100%;justify-content:space-between;font-size:15px;padding:18px 24px;">
-        <span>{t(locale, 'home.cta.btn1')}</span>
+      <a href={primaryUrl} target={primaryUrl.startsWith('http') ? '_blank' : undefined} rel="noopener" class="btn btn-inverse" style="width:100%;justify-content:space-between;font-size:15px;padding:18px 24px;">
+        <span>{primaryCta}</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
       </a>
-      <a href="#sources" class="btn btn-ghost-inverse" style="width:100%;justify-content:center;font-size:14px;">
-        {t(locale, 'home.cta.btn2')}
+      <a href={secondaryUrl} class="btn btn-ghost-inverse" style="width:100%;justify-content:center;font-size:14px;">
+        {secondaryCta}
       </a>
       <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:10px;line-height:1.5;">
         {t(locale, 'home.cta.note')}

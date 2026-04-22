@@ -3,9 +3,31 @@ import type { Locale } from '../i18n/config'
 import { t } from '../i18n/ui'
 import Placeholder from './Placeholder.astro'
 
-interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
-const { locale, accentColour = 'turquoise' } = Astro.props
+interface SeasonalContent {
+  eyebrow?: string
+  title?: string
+  body?: string
+  cta1Label?: string
+  cta1Url?: string
+  cta2Label?: string
+  cta2Url?: string
+}
+
+interface Props {
+  locale: Locale
+  accentColour?: 'turquoise' | 'yellow'
+  content?: SeasonalContent
+}
+const { locale, accentColour = 'turquoise', content = {} } = Astro.props
 const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
+
+const eyebrow = content.eyebrow ?? t(locale, 'home.seasonal.eyebrow')
+const title = content.title ?? t(locale, 'home.seasonal.title')
+const body = content.body ?? t(locale, 'home.seasonal.body')
+const cta1 = content.cta1Label ?? t(locale, 'home.seasonal.cta1')
+const cta1Url = content.cta1Url ?? 'https://www.ensanahotels.com'
+const cta2 = content.cta2Label ?? t(locale, 'home.seasonal.cta2')
+const cta2Url = content.cta2Url ?? '#sources'
 ---
 <section style="padding:110px 80px;background:#fff;">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;">
@@ -22,20 +44,20 @@ const accentMuted = accentColour === 'yellow' ? '#A4642F' : '#33728D'
     </div>
     <div>
       <div style={`font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:${accentMuted};font-weight:700;`}>
-        {t(locale, 'home.seasonal.eyebrow')}
+        {eyebrow}
       </div>
       <h2 style="font-size:clamp(32px,4vw,52px);font-weight:700;color:#004F71;line-height:1.02;letter-spacing:-0.012em;margin:18px 0 0;">
-        {t(locale, 'home.seasonal.title')}
+        {title}
       </h2>
       <p style="font-size:17px;font-weight:350;color:#33728D;line-height:1.6;margin-top:24px;">
-        {t(locale, 'home.seasonal.body')}
+        {body}
       </p>
       <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap;">
-        <a href="https://www.ensanahotels.com" target="_blank" rel="noopener" class="btn btn-primary">
-          {t(locale, 'home.seasonal.cta1')}
+        <a href={cta1Url} target={cta1Url.startsWith('http') ? '_blank' : undefined} rel="noopener" class="btn btn-primary">
+          {cta1}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
         </a>
-        <a href="#sources" class="btn btn-ghost">{t(locale, 'home.seasonal.cta2')}</a>
+        <a href={cta2Url} class="btn btn-ghost">{cta2}</a>
       </div>
     </div>
   </div>
