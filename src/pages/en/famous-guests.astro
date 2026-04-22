@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'en-famous-visitors')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="en" title="Famous Guests" eyebrow="About the town" coverTone="warm"
+<PillarPage locale="en" title="Famous Guests" eyebrow="About the town" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'History',href:'/en/history'},{label:'Famous Guests'}]}>
   {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 </PillarPage>

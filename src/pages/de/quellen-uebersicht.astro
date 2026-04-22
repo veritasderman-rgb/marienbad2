@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content'
 const entry = await getEntry('pages', 'de-quellen-uebersicht')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="de" title="Quellenübersicht" eyebrow="Heilquellen & Kuren" coverTone="water"
+<PillarPage locale="de" title="Quellenübersicht" eyebrow="Heilquellen & Kuren" coverTone="water" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Start',href:'/de/'},{label:'Heilquellen',href:'/de/mineralquellen'},{label:'Quellenübersicht'}]}>
   {Content ? <Content /> : <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>}
 </PillarPage>

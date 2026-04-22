@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content'
 const entry = await getEntry('pages', 'en-things-to-do')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="en" title="Things to Do" eyebrow="What to do" coverTone="forest"
+<PillarPage locale="en" title="Things to Do" eyebrow="What to do" coverTone="forest" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'Activities',href:'/en/things-to-do'},{label:'Things to Do'}]}>
   {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 </PillarPage>

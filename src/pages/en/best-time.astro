@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'en-best-time-to-visit')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="en" title="Best Time to Visit" eyebrow="Practical" coverTone="forest"
+<PillarPage locale="en" title="Best Time to Visit" eyebrow="Practical" coverTone="forest" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'Practical',href:'/en/practical-info'},{label:'Best Time to Visit'}]}>
   {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 </PillarPage>

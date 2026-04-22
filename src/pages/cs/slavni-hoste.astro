@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'cs-slavni-navstevnici')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="cs" title="Slavní hosté" eyebrow="O městě" coverTone="warm"
+<PillarPage locale="cs" title="Slavní hosté" eyebrow="O městě" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Historie',href:'/cs/historie'},{label:'Slavní hosté'}]}>
   {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 </PillarPage>

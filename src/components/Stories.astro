@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content'
 import type { Locale } from '../i18n/config'
 import { routes } from '../i18n/config'
 import { t } from '../i18n/ui'
@@ -8,25 +9,14 @@ interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
 const { locale, accentColour = 'turquoise' } = Astro.props
 const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
 
-const posts = locale === 'de' ? [
-  { ey:'TRADITION', title:'Warum der Rudolf-Quell rot fließt', excerpt:'Das eisenreiche Wasser unter Nové Lázně — was es bewirkt und wer es trinkt.', tone:'water' as const, read:'6 Min' },
-  { ey:'PROGRAMM', title:'Eine Woche Vitalität', excerpt:'Sieben Tage, sechs Behandlungen, zwei Arztbesuche — ein Muster-Itinerar aus Hvězda.', tone:'mineral' as const, read:'9 Min' },
-  { ey:'MENSCHEN', title:'Dr. Katarína Šimková über langsame Kuren', excerpt:'Unsere Rheumatologin darüber, warum drei Wochen drei Tage immer schlagen.', tone:'warm' as const, read:'7 Min' },
-] : locale === 'cs' ? [
-  { ey:'TRADICE', title:'Proč Rudolfův pramen teče červeně', excerpt:'Železitá voda pod Novými Lázněmi — co dělá a kdo ji pije.', tone:'water' as const, read:'6 min' },
-  { ey:'PROGRAM', title:'Týden vitality', excerpt:'Sedm dní, šest procedur, dvě lékařské návštěvy — vzorový itinerář z Hvězdy.', tone:'mineral' as const, read:'9 min' },
-  { ey:'LIDÉ', title:'Dr. Katarína Šimková o pomalých kúrách', excerpt:'Naše revmatoložka o tom, proč tři týdny vždy porazí tři dny.', tone:'warm' as const, read:'7 min' },
-] : locale === 'ru' ? [
-  { ey:'ТРАДИЦИЯ', title:'Почему Рудольфов источник течёт красным', excerpt:'Железистая вода под Новыми Лазнями — что она делает и кто её пьёт.', tone:'water' as const, read:'6 мин' },
-  { ey:'ПРОГРАММА', title:'Неделя жизненной силы', excerpt:'Семь дней, шесть процедур, два врачебных приёма — примерный маршрут из Звезды.', tone:'mineral' as const, read:'9 мин' },
-  { ey:'ЛЮДИ', title:'Д-р Катарина Шимкова о медленных курсах', excerpt:'Наш ревматолог о том, почему три недели всегда лучше трёх дней.', tone:'warm' as const, read:'7 мин' },
-] : [
-  { ey:'TRADITION', title:"Why the Rudolph spring runs red", excerpt:'The iron-rich water rising under Nové Lázně — what it does and who drinks it.', tone:'water' as const, read:'6 min' },
-  { ey:'PROGRAMME', title:'A week of vitality', excerpt:'Seven days, six treatments, two doctor visits — a sample itinerary from Hvězda.', tone:'mineral' as const, read:'9 min' },
-  { ey:'PEOPLE', title:'Dr. Katarína Šimková on slow cures', excerpt:'Our senior rheumatologist on why three weeks still beats three days.', tone:'warm' as const, read:'7 min' },
-]
+const allStories = await getCollection('stories', (e) => e.data.status !== 'draft')
+const localized = allStories.filter((s) => s.data.locale === locale)
+const picks = (localized.length >= 3 ? localized : allStories).slice(0, 3)
 
-const magazineHref = `/${locale}/${(routes['magazine'] as any)[locale] ?? 'magazin'}`
+const peopleSlug = (routes['people'] as any)[locale] ?? 'menschen'
+const magazineHref = `/${locale}/${peopleSlug}`
+
+const tones: Array<'water' | 'mineral' | 'warm'> = ['water', 'mineral', 'warm']
 ---
 <section style="padding:110px 80px;background:#0F3B52;color:#fff;">
   <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;">
@@ -43,16 +33,27 @@ const magazineHref = `/${locale}/${(routes['magazine'] as any)[locale] ?? 'magaz
     </a>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;">
-    {posts.map(p => (
-      <article style="display:flex;flex-direction:column;cursor:pointer;">
-        <div style="height:260px;border-radius:8px;overflow:hidden;margin-bottom:20px;position:relative;">
-          <Placeholder label={p.title} tone={p.tone} />
-        </div>
-        <div style={`font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;color:${accent};`}>{p.ey}</div>
-        <h3 style="font-size:24px;font-weight:700;margin:10px 0;line-height:1.2;">{p.title}</h3>
-        <p style="font-size:15px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.78);margin:0;">{p.excerpt}</p>
-        <div style="margin-top:16px;font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:0.08em;">{p.read}</div>
-      </article>
-    ))}
+    {picks.map((story, i) => {
+      const slug = story.slug.replace(/^[a-z]{2}-/, '')
+      const name = story.data.name ?? story.data.personName ?? story.data.title
+      const href = `/${locale}/${peopleSlug}/${slug}`
+      return (
+        <a href={href} style="display:flex;flex-direction:column;color:inherit;text-decoration:none;">
+          <div style="height:260px;border-radius:8px;overflow:hidden;margin-bottom:20px;position:relative;background:#1d4a62;">
+            <Placeholder src={story.data.portrait} alt={name} label={name} tone={tones[i % 3]} />
+          </div>
+          {story.data.location && (
+            <div style={`font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;color:${accent};`}>{story.data.location}</div>
+          )}
+          <h3 style="font-size:24px;font-weight:700;margin:10px 0;line-height:1.2;">{name}</h3>
+          {story.data.quote && (
+            <p style="font-size:15px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.78);margin:0;font-style:italic;">&ldquo;{story.data.quote.slice(0, 140)}{story.data.quote.length > 140 ? '…' : ''}&rdquo;</p>
+          )}
+          {story.data.visitLabel && (
+            <div style="margin-top:16px;font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:0.08em;">{story.data.visitLabel}</div>
+          )}
+        </a>
+      )
+    })}
   </div>
 </section>

@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'ru-unesco')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="ru" title="ЮНЕСКО" eyebrow="О городе" coverTone="colonnade"
+<PillarPage locale="ru" title="ЮНЕСКО" eyebrow="О городе" coverTone="colonnade" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'История',href:'/ru/istoriya'},{label:'ЮНЕСКО'}]}>
   {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>

@@ -3,12 +3,19 @@ import type { Locale } from '../i18n/config'
 import { routes } from '../i18n/config'
 import { t } from '../i18n/ui'
 import Placeholder from './Placeholder.astro'
+import galleriesData from '../content/hotel-galleries/data.json'
 
 interface Props { locale: Locale; accentColour?: 'turquoise' | 'yellow' }
 const { locale, accentColour = 'turquoise' } = Astro.props
 const accent = accentColour === 'yellow' ? '#E4C158' : '#8BD3E6'
 
 const base = `/${locale}/${(routes['accommodation'] as any)[locale] ?? 'unterkunft'}`
+
+const galleryMap: Record<string, string | null> = {}
+for (const h of galleriesData.hotels) {
+  galleryMap[h.slug] = h.images?.[0]?.image ?? null
+}
+const slugMap: Record<string, string> = { nove: 'nove-lazne', centralni: 'centralni-lazne', hvezda: 'hvezda', pacifik: 'pacifik' }
 
 const hotels = [
   { id:'nove', name:'Nové Lázně', tier: locale==='de'?'Königliches Erbe':locale==='cs'?'Královské dědictví':locale==='ru'?'Королевское наследие':'Royal heritage', desc: locale==='de'?'Neorenaissance-Pracht an der Hauptpromenade. Das Royal-Kabinett Eduards VII. ist erhalten; der eisenreiche Rudolf-Quell entspringt im Keller.':locale==='cs'?'Novorenesanční nádhera na hlavní promenádě. Královský kabinet Eduarda VII. zachován; železitý Rudolfův pramen pramení v suterénu.':locale==='ru'?'Неоренессансное великолепие на главной набережной. Королевский кабинет Эдуарда VII сохранён; железистый Рудольфов источник бьёт в подвале.':'Neo-Renaissance grandeur on the main promenade. Edward VII\'s Royal Cabin is preserved; the iron-rich Rudolph spring rises in the basement.', price:215, tags:['Medical spa','Historic'], tone:'colonnade' as const },
@@ -38,7 +45,7 @@ const hotels = [
     {hotels.map(h => (
       <a href={`${base}/hotel/${h.id}`} class="card-hover" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,79,113,0.08);display:flex;flex-direction:column;cursor:pointer;">
         <div style="height:240px;position:relative;">
-          <Placeholder label={h.name} tone={h.tone} />
+          <Placeholder src={galleryMap[slugMap[h.id]] ?? undefined} label={h.name} alt={h.name} tone={h.tone} />
           <div style="position:absolute;top:14px;left:14px;padding:4px 10px;background:rgba(255,255,255,0.92);border-radius:2px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#004F71;font-weight:700;">
             {h.tier}
           </div>

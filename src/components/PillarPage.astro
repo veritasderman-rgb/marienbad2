@@ -24,6 +24,7 @@ interface Props {
   description?: string
   eyebrow?: string
   coverTone?: 'colonnade' | 'water' | 'mineral' | 'forest' | 'warm' | 'default'
+  coverImage?: string
   breadcrumbs?: Array<{ label: string; href?: string }>
   mdocContent?: RenderableTreeNode
   headings?: Heading[]
@@ -38,6 +39,7 @@ const {
   description,
   eyebrow,
   coverTone = 'colonnade',
+  coverImage,
   breadcrumbs = [],
   mdocContent,
   headings = [],
@@ -53,7 +55,7 @@ const hasToc = headings.length > 0
   {breadcrumbs.length > 0 && <Breadcrumbs crumbs={breadcrumbs} />}
 
   <header style="position:relative;height:320px;overflow:hidden;">
-    <Placeholder tone={coverTone} style="position:absolute;inset:0;height:100%;" />
+    <Placeholder src={coverImage} tone={coverTone} alt={title} style="position:absolute;inset:0;height:100%;" />
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,79,113,0.6) 0%,rgba(0,79,113,0.3) 100%);"></div>
     <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 80px 48px;">
       {eyebrow && (

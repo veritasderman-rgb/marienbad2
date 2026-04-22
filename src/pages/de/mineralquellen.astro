@@ -53,7 +53,7 @@ const quizTranslations = {
 
 const title = entry?.data.title ?? 'Mineralquellen'
 ---
-<PillarPage locale="de" title={title} description={entry?.data.metaDescription} eyebrow="Heilquellen & Kuren" coverTone="water"
+<PillarPage locale="de" title={title} description={entry?.data.metaDescription} eyebrow="Heilquellen & Kuren" coverTone="water" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Start',href:'/de/'},{label:'Heilquellen',href:'/de/mineralquellen'},{label:title}]}>
   {Content ? <Content /> : <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>}
 

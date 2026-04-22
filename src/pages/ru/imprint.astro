@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'ru-impressum')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="ru" title="Imprint" eyebrow="Правовое" coverTone="warm"
+<PillarPage locale="ru" title="Imprint" eyebrow="Правовое" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Главная',href:'/ru/'},{label:'Imprint'}]}>
   {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>

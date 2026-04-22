@@ -6,7 +6,7 @@ const entry = await getEntry('pages', 'ru-faq')
 const Content = entry ? (await entry.render()).Content : null
 const schema = entry ? buildFaqSchema(extractFaqs(entry.body)) : null
 ---
-<PillarPage locale="ru" title="Частые вопросы" eyebrow="FAQ" coverTone="warm" schema={schema ?? undefined}
+<PillarPage locale="ru" title="Частые вопросы" eyebrow="FAQ" coverTone="warm" coverImage={entry?.data.featuredImage} schema={schema ?? undefined}
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Практическое',href:'/ru/prakticheskaya-informaciya'},{label:'Частые вопросы'}]}>
   {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>

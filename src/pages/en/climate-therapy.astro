@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content'
 const entry = await getEntry('pages', 'en-climate-therapy')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="en" title="Climate Therapy" eyebrow="Healing springs & spas" coverTone="forest"
+<PillarPage locale="en" title="Climate Therapy" eyebrow="Healing springs & spas" coverTone="forest" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'Springs',href:'/en/mineral-springs'},{label:'Climate Therapy'}]}>
   {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 </PillarPage>

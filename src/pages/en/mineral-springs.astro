@@ -48,7 +48,7 @@ const quizTranslations = {
 const entry = await getEntry('pages', 'en-mineral-springs')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="en" title="Mineral Springs" eyebrow="Healing springs & spas" coverTone="water"
+<PillarPage locale="en" title="Mineral Springs" eyebrow="Healing springs & spas" coverTone="water" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'Springs',href:'/en/mineral-springs'},{label:'Mineral Springs'}]}>
   {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 

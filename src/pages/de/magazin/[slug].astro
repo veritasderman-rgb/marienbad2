@@ -29,6 +29,12 @@ const crumbs = [
   <Nav locale={locale} />
   <Breadcrumbs crumbs={crumbs} />
 
+  {entry.data.coverImage && (
+    <div style="width:100%;aspect-ratio:3/1;max-height:480px;overflow:hidden;">
+      <img src={entry.data.coverImage} alt={entry.data.title} loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;" />
+    </div>
+  )}
+
   <article style="background:#FAF6EE;padding:64px 80px 96px;max-width:860px;margin:0 auto;">
     {entry.data.category && (
       <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:16px;">

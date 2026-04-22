@@ -4,18 +4,31 @@ interface Props {
   tone?: 'colonnade' | 'water' | 'mineral' | 'forest' | 'warm' | 'default'
   class?: string
   style?: string
+  src?: string
+  alt?: string
 }
-const { label, tone = 'default', class: cls, style } = Astro.props
+const { label, tone = 'default', class: cls, style, src, alt } = Astro.props
 ---
-<div
-  class:list={['placeholder-gradient', 'w-full', 'h-full', cls]}
-  data-tone={tone}
-  style={style}
-  aria-hidden="true"
->
-  {label && (
-    <span style="position:absolute;bottom:12px;left:12px;right:12px;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ensana-indigo-80);opacity:0.7;pointer-events:none;">
-      {label}
-    </span>
-  )}
-</div>
+{src ? (
+  <img
+    src={src}
+    alt={alt ?? label ?? ''}
+    class:list={['w-full', 'h-full', cls]}
+    style={`object-fit:cover;${style ?? ''}`}
+    loading="lazy"
+    decoding="async"
+  />
+) : (
+  <div
+    class:list={['placeholder-gradient', 'w-full', 'h-full', cls]}
+    data-tone={tone}
+    style={style}
+    aria-hidden="true"
+  >
+    {label && (
+      <span style="position:absolute;bottom:12px;left:12px;right:12px;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ensana-indigo-80);opacity:0.7;pointer-events:none;">
+        {label}
+      </span>
+    )}
+  </div>
+)}

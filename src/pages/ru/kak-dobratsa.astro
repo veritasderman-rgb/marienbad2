@@ -4,7 +4,7 @@ import PillarPage from '../../components/PillarPage.astro'
 const entry = await getEntry('pages', 'ru-kak-dobratsya')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="ru" title="Как добраться" eyebrow="Практическое" coverTone="warm"
+<PillarPage locale="ru" title="Как добраться" eyebrow="Практическое" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Практическое',href:'/ru/prakticheskaya-informaciya'},{label:'Как добраться'}]}>
   {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>

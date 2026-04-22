@@ -20,7 +20,7 @@ const itineraryTranslations = {
 const entry = await getEntry('pages', 'cs-prakticke-informace')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="cs" title="Praktické informace" eyebrow="Praktické" coverTone="warm"
+<PillarPage locale="cs" title="Praktické informace" eyebrow="Praktické" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Praktické',href:'/cs/prakticke-informace'},{label:'Praktické informace'}]}>
   {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 

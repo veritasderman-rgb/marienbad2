@@ -47,7 +47,7 @@ const crumbs = [
       </div>
     </article>
     <aside style="position:sticky;top:100px;">
-      <Placeholder tone="warm" style="height:360px;border-radius:8px;overflow:hidden;" />
+      <Placeholder src={entry.data.portrait ?? undefined} alt={entry.data.name ?? entry.data.title} tone="warm" style="height:360px;border-radius:8px;overflow:hidden;" />
       {entry.data.visitLabel && (
         <p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#6695AA;font-weight:600;margin:16px 0 0;text-align:center;">
           {entry.data.visitLabel}

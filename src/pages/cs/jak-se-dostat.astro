@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content'
 const entry = await getEntry('pages', 'cs-jak-se-dostat')
 const Content = entry ? (await entry.render()).Content : null
 ---
-<PillarPage locale="cs" title="Jak se dostat" eyebrow="Praktické" coverTone="warm"
+<PillarPage locale="cs" title="Jak se dostat" eyebrow="Praktické" coverTone="warm" coverImage={entry?.data.featuredImage}
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Praktické',href:'/cs/prakticke-informace'},{label:'Jak se dostat'}]}>
   {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 </PillarPage>
