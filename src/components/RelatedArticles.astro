@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content'
+import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
+
+interface Props {
+  locale: Locale
+  category?: string
+  limit?: number
+}
+
+const { locale, category, limit = 3 } = Astro.props
+
+const all = await getCollection('articles', (e) => e.data.locale === locale && e.data.status !== 'draft')
+all.sort((a, b) => (b.data.date ?? '').localeCompare(a.data.date ?? ''))
+const filtered = (category ? all.filter((a) => a.data.category === category) : all).slice(0, limit)
+
+const magazineSlugs: Record<Locale, string> = {
+  de: 'magazin',
+  en: 'magazine',
+  cs: 'magazin',
+  ru: 'zhurnal',
+}
+const magazineSlug = magazineSlugs[locale]
+
+const sectionTitles: Record<Locale, string> = {
+  de: 'Weitere Artikel',
+  en: 'Related Articles',
+  cs: 'Související články',
+  ru: 'Похожие статьи',
+}
+const allArticlesLabels: Record<Locale, string> = {
+  de: 'Alle Artikel',
+  en: 'All Articles',
+  cs: 'Všechny články',
+  ru: 'Все статьи',
+}
+
+const categoryLabels: Record<string, Record<Locale, string>> = {
+  health: { de: 'Gesundheit', en: 'Health', cs: 'Zdraví', ru: 'Здоровье' },
+  wellness: { de: 'Wellness', en: 'Wellness', cs: 'Wellness', ru: 'Велнес' },
+  planning: { de: 'Planung', en: 'Planning', cs: 'Plánování', ru: 'Планирование' },
+  culture: { de: 'Kultur', en: 'Culture', cs: 'Kultura', ru: 'Культура' },
+  tip: { de: 'Tipp', en: 'Tip', cs: 'Tip', ru: 'Совет' },
+  nature: { de: 'Natur', en: 'Nature', cs: 'Příroda', ru: 'Природа' },
+  history: { de: 'Geschichte', en: 'History', cs: 'Historie', ru: 'История' },
+  food: { de: 'Genuss', en: 'Food', cs: 'Jídlo', ru: 'Еда' },
+  healing: { de: 'Heilung', en: 'Healing', cs: 'Léčba', ru: 'Лечение' },
+  springs: { de: 'Quellen', en: 'Springs', cs: 'Prameny', ru: 'Источники' },
+  activities: { de: 'Aktivitäten', en: 'Activities', cs: 'Aktivity', ru: 'Активности' },
+  comparison: { de: 'Vergleich', en: 'Comparison', cs: 'Srovnání', ru: 'Сравнение' },
+}
+---
+
+{filtered.length > 0 && (
+  <section style="margin-top:64px;padding-top:48px;border-top:1px solid #E8DFCB;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
+      <h2 style="font-size:clamp(24px,3vw,32px);font-weight:700;color:#004F71;margin:0;">{sectionTitles[locale]}</h2>
+      <a href={`/${locale}/${magazineSlug}`} style="color:#3AA7C9;font-weight:500;font-size:14px;text-decoration:none;">
+        {allArticlesLabels[locale]} &rarr;
+      </a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;">
+      {filtered.map((article) => {
+        const href = `/${locale}/${magazineSlug}/${article.slug.replace(/^[a-z]{2}-/, '')}`
+        const categoryLabel = categoryLabels[article.data.category ?? '']?.[locale] ?? article.data.category
+        return (
+          <a href={href} style="display:block;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,79,113,0.08);text-decoration:none;color:inherit;">
+            {article.data.coverImage && (
+              <div style="height:176px;overflow:hidden;">
+                <img src={article.data.coverImage} alt={article.data.title} loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;" />
+              </div>
+            )}
+            <div style="padding:20px;">
+              <span style="color:#B3ADA3;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">{categoryLabel}</span>
+              <h3 style="font-size:20px;font-weight:700;color:#004F71;margin:8px 0;">{article.data.title}</h3>
+              <p style="color:#6695AA;font-size:14px;line-height:1.5;margin:0;">{article.data.excerpt}</p>
+              <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;color:#B3ADA3;font-size:12px;">
+                <span>{article.data.readingTime}</span>
+                <span style="color:#3AA7C9;font-weight:500;">{t(locale, 'common.readMore')}</span>
+              </div>
+            </div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+)}
