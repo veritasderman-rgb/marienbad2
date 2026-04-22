@@ -1,0 +1,170 @@
+---
+import Markdoc, { type RenderableTreeNode } from '@markdoc/markdoc'
+
+interface Props {
+  content: RenderableTreeNode
+}
+
+const { content } = Astro.props
+
+/**
+ * Custom HTML renderer that handles our custom Markdoc tags:
+ * - figure: responsive image with optional caption
+ * - gallery: grid of images
+ * - gallery-image: individual image inside a gallery
+ * - pullquote: styled blockquote for editorial pull quotes
+ */
+function renderCustomHtml(node: RenderableTreeNode): string {
+  if (node === null || node === undefined) return ''
+  if (typeof node === 'string') return escapeHtml(node)
+  if (Array.isArray(node)) return node.map(renderCustomHtml).join('')
+
+  if (typeof node === 'object' && '$$mdtype' in node) {
+    const tag = node as any
+    const name = tag.name
+    const attrs = tag.attributes || {}
+    const children = tag.children || []
+
+    // Custom tag: figure
+    if (name === 'figure') {
+      const widthClass =
+        attrs.width === 'wide' ? ' figure-wide' :
+        attrs.width === 'full' ? ' figure-full' : ''
+      const caption = attrs.caption
+        ? `<figcaption class="figure-caption">${escapeHtml(attrs.caption)}</figcaption>`
+        : ''
+      return `<figure class="article-figure${widthClass}"><img src="${escapeAttr(attrs.src)}" alt="${escapeAttr(attrs.alt)}" loading="lazy" decoding="async" />${caption}</figure>`
+    }
+
+    // Custom tag: gallery
+    if (name === 'gallery') {
+      const isScroll = attrs.layout === 'scroll'
+      const cols = attrs.columns === 3 ? 'gallery-3' : 'gallery-2'
+      const inner = children.map(renderCustomHtml).join('')
+      const caption = attrs.caption
+        ? `<figcaption class="figure-caption">${escapeHtml(attrs.caption)}</figcaption>`
+        : ''
+      if (isScroll) {
+        return `<div class="article-gallery-scroll"><div class="gallery-scroll-track">${inner}</div>${caption}</div>`
+      }
+      return `<div class="article-gallery ${cols}">${inner}${caption}</div>`
+    }
+
+    // Custom tag: gallery-image
+    if (name === 'gallery-image') {
+      return `<figure class="gallery-item"><img src="${escapeAttr(attrs.src)}" alt="${escapeAttr(attrs.alt)}" loading="lazy" decoding="async" /></figure>`
+    }
+
+    // Custom tag: pullquote
+    if (name === 'pullquote') {
+      const cite = attrs.cite
+        ? `<cite class="pullquote-cite">${escapeHtml(attrs.cite)}</cite>`
+        : ''
+      return `<blockquote class="article-pullquote"><p>${escapeHtml(attrs.text)}</p>${cite}</blockquote>`
+    }
+
+    // Custom tag: treatment-box
+    if (name === 'treatment-box') {
+      const iconPaths: Record<string, string> = {
+        water: 'M12 21.5c-3.04 0-5.5-2.09-5.5-6 0-3.91 5.5-11 5.5-11s5.5 7.09 5.5 11c0 3.91-2.46 6-5.5 6z',
+        earth: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
+        gas: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2v-2zm1-10c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z',
+        climate: 'M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z',
+      }
+      const iconPath = iconPaths[attrs.icon || 'water'] || iconPaths.water
+      return `<aside class="my-10 bg-indigo-700 text-white rounded-2xl p-6 md:p-8"><div class="flex items-center gap-4 mb-4"><div class="shrink-0 w-11 h-11 rounded-xl bg-turquoise-400/20 flex items-center justify-center"><svg class="w-5 h-5 text-turquoise-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="${iconPath}" /></svg></div><h3>${escapeHtml(attrs.title)}</h3></div><p class="text-white/80 leading-relaxed max-w-none">${escapeHtml(attrs.description)}</p></aside>`
+    }
+
+    // Custom tag: hotel-box
+    if (name === 'hotel-box') {
+      return renderHotelBox(attrs)
+    }
+
+    // Default: render standard Markdoc tags as HTML
+    return Markdoc.renderers.html([node])
+  }
+
+  return String(node)
+}
+
+function renderHotelBox(attrs: any): string {
+  const starsStr = '\u2605'.repeat(Number(attrs.stars) || 0)
+  const badgeHtml = attrs.badge
+    ? '<span class="px-2 py-0.5 bg-yellow-400 text-beige-950 text-xs font-semibold rounded-full">' + escapeHtml(attrs.badge) + '</span>'
+    : ''
+  const descRaw = escapeHtml(attrs.description)
+  const descLines = descRaw.split('\n').filter(function(l: string) { return l.trim() })
+  const mainLines: string[] = []
+  const bulletLines: string[] = []
+  descLines.forEach(function(line: string) {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+      bulletLines.push(trimmed.slice(2))
+    } else {
+      mainLines.push(trimmed)
+    }
+  })
+  const mainMb = bulletLines.length > 0 ? 'mb-2' : 'mb-4'
+  const mainHtml = mainLines.length > 0
+    ? '<p class="text-beige-700 text-sm leading-relaxed ' + mainMb + '">' + mainLines.join('<br>') + '</p>'
+    : ''
+  const bulletsHtml = bulletLines.length > 0
+    ? '<ul class="text-turquoise-700 text-xs leading-relaxed mb-4 space-y-1 list-disc list-inside">' + bulletLines.map(function(b: string) { return '<li>' + b + '</li>' }).join('') + '</ul>'
+    : ''
+  return '<aside class="my-8 bg-beige-200 rounded-xl p-6 md:p-8 border-l-4 border-turquoise-400">'
+    + '<div class="flex items-start justify-between gap-4 mb-3">'
+    + '<div><span class="text-turquoise-600 text-xs font-semibold uppercase tracking-wider">Recommendation</span>'
+    + '<h3 class="font-heading text-xl font-bold text-indigo-700 mt-1">' + escapeHtml(attrs.name) + '</h3></div>'
+    + '<div class="flex items-center gap-2 shrink-0"><span class="text-yellow-500 text-sm">' + starsStr + '</span>' + badgeHtml + '</div></div>'
+    + mainHtml + bulletsHtml
+    + '<a href="' + escapeAttr(attrs.bookingUrl) + '" class="inline-flex items-center gap-1.5 text-indigo-500 hover:text-indigo-700 text-sm font-semibold transition-colors" target="_blank" rel="noopener noreferrer">'
+    + escapeHtml(attrs.bookingLabel)
+    + '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>'
+    + '</a></aside>'
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function escapeAttr(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
+// For top-level, we need to handle the array of nodes
+function renderAll(content: RenderableTreeNode): string {
+  if (Array.isArray(content)) {
+    return content.map(renderCustomHtml).join('')
+  }
+  if (content && typeof content === 'object' && '$$mdtype' in content) {
+    const tag = content as any
+    // If root is an 'article' wrapper or similar, render children
+    if (tag.children) {
+      return tag.children.map(renderCustomHtml).join('')
+    }
+  }
+  return Markdoc.renderers.html(content)
+}
+
+// Check if content has any custom tags — if not, use fast path
+function hasCustomTags(node: any): boolean {
+  if (!node || typeof node !== 'object') return false
+  if ('$$mdtype' in node) {
+    const name = node.name
+    if (name === 'figure' || name === 'gallery' || name === 'gallery-image' || name === 'pullquote' || name === 'treatment-box' || name === 'hotel-box') return true
+    if (node.children) return node.children.some(hasCustomTags)
+  }
+  if (Array.isArray(node)) return node.some(hasCustomTags)
+  return false
+}
+
+const html = hasCustomTags(content)
+  ? renderAll(content)
+  : Markdoc.renderers.html(content)
+---
+
+<Fragment set:html={html} />
