@@ -1,0 +1,125 @@
+---
+import type { Locale } from '../i18n/config'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const labels = {
+  de: {
+    title: 'Neuigkeiten aus Marienbad',
+    description: 'Monatlicher Newsletter mit Reisegeschichten, neuen Behandlungen und saisonalen Angeboten. Kein Spam, jederzeit abbestellbar.',
+    placeholder: 'Ihre E-Mail-Adresse',
+    button: 'Abonnieren',
+    success: 'Vielen Dank! Bitte bestätigen Sie Ihre E-Mail-Adresse.',
+    error: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut.',
+    disclaimer: 'Mit dem Abonnieren akzeptieren Sie unsere Datenschutzerklärung.',
+  },
+  en: {
+    title: 'News from Marienbad',
+    description: 'Monthly newsletter with travel stories, new treatments and seasonal offers. No spam, unsubscribe anytime.',
+    placeholder: 'Your email address',
+    button: 'Subscribe',
+    success: 'Thank you! Please confirm your email address.',
+    error: 'Something went wrong. Please try again later.',
+    disclaimer: 'By subscribing you accept our privacy policy.',
+  },
+  cs: {
+    title: 'Novinky z Mariánských Lázní',
+    description: 'Měsíční newsletter s cestovními příběhy, novými procedurami a sezónními nabídkami. Žádný spam, kdykoli lze odhlásit.',
+    placeholder: 'Vaše e-mailová adresa',
+    button: 'Odebírat',
+    success: 'Děkujeme! Potvrďte prosím svou e-mailovou adresu.',
+    error: 'Něco se pokazilo. Zkuste to prosím později.',
+    disclaimer: 'Odběrem souhlasíte se zásadami ochrany osobních údajů.',
+  },
+  ru: {
+    title: 'Новости из Марианских Лазней',
+    description: 'Ежемесячный бюллетень с рассказами о путешествиях, новыми процедурами и сезонными предложениями. Без спама, отписаться можно в любое время.',
+    placeholder: 'Ваш адрес электронной почты',
+    button: 'Подписаться',
+    success: 'Спасибо! Пожалуйста, подтвердите свой адрес электронной почты.',
+    error: 'Что-то пошло не так. Пожалуйста, попробуйте позже.',
+    disclaimer: 'Подпиской вы соглашаетесь с нашей политикой конфиденциальности.',
+  },
+}
+const l = labels[locale]
+---
+<section style="background:#004F71;color:#fff;padding:96px 80px;">
+  <div style="max-width:640px;margin:0 auto;text-align:center;">
+    <h2 style="font-size:clamp(32px,4vw,48px);font-weight:700;line-height:1.05;letter-spacing:-0.01em;margin:0 0 16px;">{l.title}</h2>
+    <p style="font-size:17px;color:rgba(255,255,255,0.75);line-height:1.6;margin:0 0 32px;">{l.description}</p>
+    <form id="newsletter-form" data-locale={locale} style="display:flex;flex-direction:column;gap:12px;max-width:480px;margin:0 auto;">
+      <div aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;height:0;width:0;overflow:hidden;">
+        <label for="newsletter-website">Website</label>
+        <input id="newsletter-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <input type="hidden" id="newsletter-ts" name="_ts" value="" />
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <label for="newsletter-email" class="sr-only">{l.placeholder}</label>
+        <input id="newsletter-email" type="email" placeholder={l.placeholder} required
+          style="flex:1;min-width:240px;padding:14px 20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:4px;color:#fff;font-size:15px;" />
+        <button type="submit" id="newsletter-btn"
+          style="background:#8BD3E6;color:#004F71;font-size:14px;font-weight:700;padding:14px 28px;border-radius:4px;border:0;cursor:pointer;letter-spacing:0.04em;">
+          <span class="btn-label">{l.button}</span>
+        </button>
+      </div>
+    </form>
+    <p id="newsletter-success" style="display:none;color:#8BD3E6;font-size:14px;font-weight:500;margin-top:16px;">{l.success}</p>
+    <p id="newsletter-error" style="display:none;color:#E4C158;font-size:14px;font-weight:500;margin-top:16px;"></p>
+    <p id="newsletter-disclaimer" style="color:rgba(255,255,255,0.45);font-size:12px;margin-top:16px;">{l.disclaimer}</p>
+  </div>
+</section>
+
+<script is:inline define:vars={{ errorMessage: l.error }}>
+  const tsInput = document.getElementById('newsletter-ts')
+  if (tsInput) tsInput.value = String(Date.now())
+
+  const form = document.getElementById('newsletter-form')
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = document.getElementById('newsletter-btn')
+      const email = document.getElementById('newsletter-email')
+      const honeypot = document.getElementById('newsletter-website')
+      const ts = document.getElementById('newsletter-ts')
+      const errorEl = document.getElementById('newsletter-error')
+      const successEl = document.getElementById('newsletter-success')
+      const disclaimer = document.getElementById('newsletter-disclaimer')
+
+      errorEl.style.display = 'none'
+      btn.disabled = true
+      btn.style.opacity = '0.6'
+
+      try {
+        const res = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email.value,
+            locale: form.dataset.locale || 'de',
+            website: honeypot ? honeypot.value : '',
+            _ts: ts && ts.value ? Number(ts.value) : undefined,
+          }),
+        })
+        const data = await res.json()
+        if (data.success) {
+          form.style.display = 'none'
+          successEl.style.display = 'block'
+          disclaimer.style.display = 'none'
+        } else {
+          errorEl.textContent = data.error || errorMessage
+          errorEl.style.display = 'block'
+        }
+      } catch {
+        errorEl.textContent = errorMessage
+        errorEl.style.display = 'block'
+      } finally {
+        btn.disabled = false
+        btn.style.opacity = '1'
+      }
+    })
+  }
+</script>

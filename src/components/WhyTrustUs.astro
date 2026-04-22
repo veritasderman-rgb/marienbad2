@@ -1,0 +1,71 @@
+---
+/**
+ * Why Trust Us — credibility block for pillar and article pages.
+ * Displays trust signals: local expertise, regular updates, medical disclaimer.
+ * Usage: <WhyTrustUs locale={locale} />
+ */
+import type { Locale } from '@/i18n/config'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const content: Record<Locale, { title: string; points: { icon: string; text: string }[] }> = {
+  de: {
+    title: 'Warum Sie uns vertrauen können',
+    points: [
+      { icon: 'map', text: 'Lokale Expertise — wir kennen Mariánské Lázně aus erster Hand' },
+      { icon: 'refresh', text: 'Regelmäßig aktualisiert — Preise, Öffnungszeiten und Fakten werden laufend überprüft' },
+      { icon: 'heart', text: 'Gesundheitshinweis — unsere Inhalte ersetzen keine ärztliche Beratung' },
+    ],
+  },
+  en: {
+    title: 'Why Trust Us',
+    points: [
+      { icon: 'map', text: 'Local expertise — we know Mariánské Lázně first-hand' },
+      { icon: 'refresh', text: 'Regularly updated — prices, opening hours and facts are continuously verified' },
+      { icon: 'heart', text: 'Health disclaimer — our content does not replace medical advice' },
+    ],
+  },
+  cs: {
+    title: 'Proč nám můžete věřit',
+    points: [
+      { icon: 'map', text: 'Místní znalost — Mariánské Lázně známe z první ruky' },
+      { icon: 'refresh', text: 'Pravidelné aktualizace — ceny, otevírací doby a fakta průběžně ověřujeme' },
+      { icon: 'heart', text: 'Zdravotní upozornění — náš obsah nenahrazuje lékařskou radu' },
+    ],
+  },
+  ru: {
+    title: 'Почему нам можно доверять',
+    points: [
+      { icon: 'map', text: 'Местная экспертиза — мы знаем Марианские Лазни из первых рук' },
+      { icon: 'refresh', text: 'Регулярные обновления — цены и факты постоянно проверяются' },
+      { icon: 'heart', text: 'Медицинское примечание — наш контент не заменяет консультацию врача' },
+    ],
+  },
+}
+
+const c = content[locale]
+
+const iconPaths: Record<string, string> = {
+  map: 'M15 10.5a3 3 0 11-6 0 3 3 0 016 0z M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z',
+  refresh: 'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M21.015 4.356v4.992',
+  heart: 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z',
+}
+---
+
+<aside class="bg-beige-100 border border-beige-300 rounded-2xl p-6 md:p-8 my-10 max-w-none">
+  <h3 class="font-heading text-xl font-bold text-indigo-700 mb-4" style="text-transform: none; font-size: 1.25rem; letter-spacing: 0;">{c.title}</h3>
+  <ul class="space-y-3">
+    {c.points.map(({ icon, text }) => (
+      <li class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-turquoise-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths[icon]} />
+        </svg>
+        <span class="text-sm text-beige-800 leading-relaxed">{text}</span>
+      </li>
+    ))}
+  </ul>
+</aside>
