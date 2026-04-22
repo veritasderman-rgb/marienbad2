@@ -1,7 +1,29 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
+import ItineraryFilter from '../../components/ItineraryFilter.tsx'
+import itinerariesData from '../../content/itineraries/data.json'
+import { t } from '../../i18n/ui'
+
+const locale = 'ru' as const
+
+const itineraryTranslations = {
+  title: t(locale, 'itinerary.title'),
+  subtitle: t(locale, 'itinerary.subtitle'),
+  families: t(locale, 'itinerary.families'),
+  couples: t(locale, 'itinerary.couples'),
+  solo: t(locale, 'itinerary.solo'),
+  wellness: t(locale, 'itinerary.wellness'),
+  hotelLabel: t(locale, 'itinerary.hotelLabel'),
+  activitiesLabel: t(locale, 'itinerary.activitiesLabel'),
+  treatmentLabel: t(locale, 'itinerary.treatmentLabel'),
+  detailsLink: t(locale, 'itinerary.detailsLink'),
+}
 ---
 <PillarPage locale="ru" title="Практическая информация" eyebrow="Практическое" coverTone="warm"
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Практическое',href:'/ru/prakticheskaya-informaciya'},{label:'Практическая информация'}]}>
   <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>
+
+  <section style="margin-top:64px;padding-top:48px;border-top:1px solid #E8DFCB;">
+    <ItineraryFilter client:visible locale={locale} translations={itineraryTranslations} cmsData={itinerariesData} />
+  </section>
 </PillarPage>
