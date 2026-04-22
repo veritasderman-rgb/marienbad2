@@ -1,10 +1,12 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
 import { getEntry } from 'astro:content'
+import { extractFaqs, buildFaqSchema } from '../../utils/faq'
 const entry = await getEntry('pages', 'cs-faq')
 const Content = entry ? (await entry.render()).Content : null
+const schema = entry ? buildFaqSchema(extractFaqs(entry.body)) : null
 ---
-<PillarPage locale="cs" title="Časté otázky" eyebrow="Nejčastější dotazy" coverTone="warm"
+<PillarPage locale="cs" title="Časté otázky" eyebrow="Nejčastější dotazy" coverTone="warm" schema={schema ?? undefined}
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Praktické',href:'/cs/prakticke-informace'},{label:'Časté otázky'}]}>
   {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 </PillarPage>

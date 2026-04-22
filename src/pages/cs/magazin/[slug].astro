@@ -7,6 +7,8 @@ import Nav from '../../../components/Nav.astro'
 import Footer from '../../../components/Footer.astro'
 import Breadcrumbs from '../../../components/Breadcrumbs.astro'
 import BookingCtaBar from '../../../components/BookingCtaBar.astro'
+import SocialShare from '../../../components/SocialShare.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', (e) => e.data.locale === 'cs')
@@ -16,6 +18,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props
 const locale: Locale = 'cs'
 const { Content } = await entry.render()
+const shareUrl = `https://marienbad2.vercel.app/cs/magazin/${entry.slug.replace(/^[a-z]{2}-/, '')}`
 const crumbs = [
   { label: 'Domů', href: '/cs/' },
   { label: 'Magazín', href: '/cs/magazin' },
@@ -41,6 +44,10 @@ const crumbs = [
     <div class="prose-marienbad">
       <Content />
     </div>
+    <div style="margin-top:48px;padding-top:32px;border-top:1px solid #E8DFCB;">
+      <SocialShare url={shareUrl} title={entry.data.title} locale={locale} />
+    </div>
+    <RelatedArticles locale={locale} category={entry.data.category} />
   </article>
 
   <BookingCtaBar locale={locale} />
