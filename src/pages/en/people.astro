@@ -5,9 +5,22 @@ import Base from '../../layouts/Base.astro'
 import Nav from '../../components/Nav.astro'
 import Footer from '../../components/Footer.astro'
 import BookingCtaBar from '../../components/BookingCtaBar.astro'
+import StoryFilter from '../../components/StoryFilter.tsx'
+import { t } from '../../i18n/ui'
 
 const locale: Locale = 'en'
-const stories = await getCollection('stories', (e) => e.data.locale === 'en' && e.data.status === 'published')
+const entries = await getCollection('stories', (e) => e.data.status === 'published')
+
+const stories = entries.map((e) => ({
+  slug: e.slug.replace(/^[a-z]{2}-/, ''),
+  name: e.data.name ?? e.data.personName ?? e.data.title ?? '',
+  location: e.data.location ?? '',
+  visitLabel: e.data.visitLabel ?? '',
+  quote: e.data.quote ?? '',
+  lang: e.data.lang ?? e.data.locale,
+  locale: e.data.locale,
+  portrait: e.data.portrait,
+}))
 ---
 <Base title="People – Marienbad" description="Guests share their experiences at Marienbad and the Ensana Hotels." locale={locale}>
   <Nav locale={locale} />
@@ -19,28 +32,17 @@ const stories = await getCollection('stories', (e) => e.data.locale === 'en' && 
   </header>
 
   <section style="background:#FAF6EE;padding:64px 80px 96px;">
-    {stories.length === 0 ? (
-      <p style="color:#6695AA;font-size:15px;">No stories yet.</p>
-    ) : (
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:32px;">
-        {stories.map((story) => (
-          <a href={`/en/people/${story.slug.replace(/^en-/, '')}`}
-             style="display:block;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,79,113,0.08);text-decoration:none;padding:32px;"
-             onmouseover="this.style.boxShadow='0 4px 20px rgba(0,79,113,0.16)'"
-             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,79,113,0.08)'">
-            {story.data.quote && (
-              <p style="font-size:16px;color:#004F71;font-style:italic;line-height:1.5;margin:0 0 20px;">
-                &ldquo;{story.data.quote.slice(0, 120)}{story.data.quote.length > 120 ? '…' : ''}&rdquo;
-              </p>
-            )}
-            <div style="font-size:15px;font-weight:700;color:#004F71;margin-bottom:4px;">{story.data.personName ?? story.data.title}</div>
-            {story.data.location && (
-              <div style="font-size:12px;color:#6695AA;letter-spacing:0.1em;text-transform:uppercase;">{story.data.location}</div>
-            )}
-          </a>
-        ))}
-      </div>
-    )}
+    <StoryFilter
+      client:load
+      stories={stories}
+      currentLocale={locale}
+      translations={{
+        all: t(locale, 'filter.all'),
+        byLanguage: t(locale, 'filter.byLanguage'),
+        byLocation: t(locale, 'filter.byLocation'),
+        noResults: t(locale, 'filter.noResults'),
+      }}
+    />
   </section>
 
   <BookingCtaBar locale={locale} />
