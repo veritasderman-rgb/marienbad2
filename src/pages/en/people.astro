@@ -6,6 +6,7 @@ import Nav from '../../components/Nav.astro'
 import Footer from '../../components/Footer.astro'
 import BookingCtaBar from '../../components/BookingCtaBar.astro'
 import StoryFilter from '../../components/StoryFilter.tsx'
+import StorySubmissionForm from '../../components/StorySubmissionForm.tsx'
 import { t } from '../../i18n/ui'
 
 const locale: Locale = 'en'
@@ -43,6 +44,43 @@ const stories = entries.map((e) => ({
         noResults: t(locale, 'filter.noResults'),
       }}
     />
+  </section>
+
+  <section style="background:#fff;padding:64px 80px 96px;border-top:1px solid #E8DFCB;">
+    <div style="max-width:720px;margin:0 auto;">
+      <StorySubmissionForm
+        client:visible
+        locale={locale}
+        translations={{
+          formTitle: t(locale, 'storyForm.title'),
+          formSubtitle: t(locale, 'storyForm.subtitle'),
+          nameLabel: t(locale, 'storyForm.nameLabel'),
+          namePlaceholder: t(locale, 'storyForm.namePlaceholder'),
+          emailLabel: t(locale, 'storyForm.emailLabel'),
+          emailPlaceholder: t(locale, 'storyForm.emailPlaceholder'),
+          emailHint: t(locale, 'storyForm.emailHint'),
+          locationLabel: t(locale, 'storyForm.locationLabel'),
+          locationPlaceholder: t(locale, 'storyForm.locationPlaceholder'),
+          visitLabel: t(locale, 'storyForm.visitLabel'),
+          visitRecently: t(locale, 'storyForm.visitRecently'),
+          visit1to5: t(locale, 'storyForm.visit1to5'),
+          visit5to10: t(locale, 'storyForm.visit5to10'),
+          visit10plus: t(locale, 'storyForm.visit10plus'),
+          storyLabel: t(locale, 'storyForm.storyLabel'),
+          storyPlaceholder: t(locale, 'storyForm.storyPlaceholder'),
+          storyHint: t(locale, 'storyForm.storyHint'),
+          photoConsent: t(locale, 'storyForm.photoConsent'),
+          privacyConsent: t(locale, 'storyForm.privacyConsent'),
+          submitButton: t(locale, 'storyForm.submitButton'),
+          submitting: t(locale, 'storyForm.submitting'),
+          successTitle: t(locale, 'storyForm.successTitle'),
+          successMessage: t(locale, 'storyForm.successMessage'),
+          errorMessage: t(locale, 'storyForm.errorMessage'),
+          required: t(locale, 'storyForm.required'),
+          minChars: t(locale, 'storyForm.minChars'),
+        }}
+      />
+    </div>
   </section>
 
   <BookingCtaBar locale={locale} />
