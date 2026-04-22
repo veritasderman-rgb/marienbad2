@@ -1,11 +1,22 @@
 ---
+import type { RenderableTreeNode } from '@markdoc/markdoc'
 import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
 import Base from '../layouts/Base.astro'
 import Nav from './Nav.astro'
 import Footer from './Footer.astro'
 import Breadcrumbs from './Breadcrumbs.astro'
 import BookingCtaBar from './BookingCtaBar.astro'
 import Placeholder from './Placeholder.astro'
+import MarkdocRenderer from './MarkdocRenderer.astro'
+import TableOfContents from './TableOfContents.astro'
+import RelatedArticles from './RelatedArticles.astro'
+
+interface Heading {
+  text: string
+  slug: string
+  depth: number
+}
 
 interface Props {
   locale: Locale
@@ -14,6 +25,10 @@ interface Props {
   eyebrow?: string
   coverTone?: 'colonnade' | 'water' | 'mineral' | 'forest' | 'warm' | 'default'
   breadcrumbs?: Array<{ label: string; href?: string }>
+  mdocContent?: RenderableTreeNode
+  headings?: Heading[]
+  relatedCategory?: string
+  showRelated?: boolean
 }
 
 const {
@@ -23,13 +38,18 @@ const {
   eyebrow,
   coverTone = 'colonnade',
   breadcrumbs = [],
+  mdocContent,
+  headings = [],
+  relatedCategory,
+  showRelated = false,
 } = Astro.props
+
+const hasToc = headings.length > 0
 ---
 <Base title={title} description={description} locale={locale}>
   <Nav locale={locale} />
   {breadcrumbs.length > 0 && <Breadcrumbs crumbs={breadcrumbs} />}
 
-  <!-- Hero strip -->
   <header style="position:relative;height:320px;overflow:hidden;">
     <Placeholder tone={coverTone} style="position:absolute;inset:0;height:100%;" />
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,79,113,0.6) 0%,rgba(0,79,113,0.3) 100%);"></div>
@@ -45,13 +65,17 @@ const {
     </div>
   </header>
 
-  <!-- Content -->
   <div style="background:#FAF6EE;padding:64px 80px 96px;display:grid;grid-template-columns:1fr 280px;gap:64px;align-items:start;max-width:1400px;margin:0 auto;">
     <article class="prose-marienbad">
-      <slot />
+      {mdocContent ? <MarkdocRenderer content={mdocContent} /> : <slot />}
+      {showRelated && <RelatedArticles locale={locale} category={relatedCategory} />}
     </article>
-    <!-- Sidebar -->
-    <aside style="position:sticky;top:100px;">
+    <aside style="position:sticky;top:100px;display:flex;flex-direction:column;gap:24px;">
+      {hasToc && (
+        <div style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 6px rgba(0,79,113,0.08);">
+          <TableOfContents headings={headings} label={t(locale, 'common.tableOfContents')} />
+        </div>
+      )}
       <div style="background:#fff;border-radius:8px;padding:24px;box-shadow:0 2px 6px rgba(0,79,113,0.08);">
         <div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#33728D;font-weight:700;margin-bottom:16px;">
           {locale === 'de' ? 'Ensana Hotels' : locale === 'cs' ? 'Hotely Ensana' : locale === 'ru' ? 'Отели Ensana' : 'Ensana Hotels'}
