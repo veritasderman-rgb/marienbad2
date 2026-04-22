@@ -1,7 +1,12 @@
 ---
+import { getEntry } from 'astro:content'
 import PillarPage from '../../components/PillarPage.astro'
+
+const entry = await getEntry('pages', 'ru-kolonnada')
+const Content = entry ? (await entry.render()).Content : null
+const title = entry?.data.title ?? 'Колоннада'
 ---
-<PillarPage locale="ru" title="Колоннада" eyebrow="Активности" coverTone="colonnade"
-  breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Активности',href:'/ru/chem-zanyatsya'},{label:'Колоннада'}]}>
-  <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>
+<PillarPage locale="ru" title={title} description={entry?.data.metaDescription} eyebrow="Активности" coverTone="colonnade"
+  breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Активности',href:'/ru/chem-zanyatsya'},{label:title}]}>
+  {Content ? <Content /> : <p>Содержание будет добавлено.</p>}
 </PillarPage>
