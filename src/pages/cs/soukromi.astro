@@ -1,7 +1,10 @@
 ---
+import { getEntry } from 'astro:content'
 import PillarPage from '../../components/PillarPage.astro'
+const entry = await getEntry('pages', 'cs-ochrana-soukromi')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="cs" title="Zásady ochrany soukromí" eyebrow="Právní" coverTone="warm"
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Úvod',href:'/cs/'},{label:'Zásady ochrany soukromí'}]}>
-  <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>
+  {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 </PillarPage>
