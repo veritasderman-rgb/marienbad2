@@ -10,9 +10,10 @@ interface Props {
   locale: Locale
   canonicalUrl?: string
   ogImage?: string
+  schema?: object
 }
 
-const { title, description, locale, canonicalUrl, ogImage } = Astro.props
+const { title, description, locale, canonicalUrl, ogImage, schema } = Astro.props
 const siteUrl = 'https://marienbad2.vercel.app'
 const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`
 const og = ogImage ?? `${siteUrl}/images/og-default.jpg`
@@ -25,6 +26,26 @@ const hreflangs = locales.map((l) => ({
 }))
 
 const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN
+
+const baseSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristDestination',
+  name: 'Mariánské Lázně (Marienbad)',
+  description: 'Historic Czech spa town famous for its healing mineral springs, colonnades and belle époque architecture.',
+  url: siteUrl,
+  touristType: ['Spa visitors', 'Wellness tourists', 'Culture tourists'],
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 49.9645986,
+    longitude: 12.7012619,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Mariánské Lázně',
+    addressCountry: 'CZ',
+  },
+}
+const finalSchema = schema ?? baseSchema
 ---
 <!doctype html>
 <html lang={locale} dir="ltr">
@@ -53,6 +74,8 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
   {plausibleDomain && <script defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js"></script>}
+
+  <script type="application/ld+json" set:html={JSON.stringify(finalSchema)}></script>
 </head>
 <body>
   <a href="#main" style="position:absolute;left:-9999px;top:0;background:#004F71;color:#fff;padding:12px 20px;z-index:9999;" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">

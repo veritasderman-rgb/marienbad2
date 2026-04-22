@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro'
+
+const labels = {
+  de: {
+    code: 'Fehler 404',
+    title: 'Seite nicht gefunden',
+    body: 'Die gesuchte Seite existiert nicht oder wurde verschoben. Kehren Sie zur Startseite zurück oder durchsuchen Sie unser Magazin.',
+    home: 'Zur Startseite',
+    magazine: 'Magazin durchsuchen',
+  },
+  en: {
+    code: 'Error 404',
+    title: 'Page not found',
+    body: 'The page you are looking for does not exist or has been moved. Return to the homepage or browse our magazine.',
+    home: 'Go to homepage',
+    magazine: 'Browse magazine',
+  },
+  cs: {
+    code: 'Chyba 404',
+    title: 'Stránka nenalezena',
+    body: 'Hledaná stránka neexistuje nebo byla přesunuta. Vraťte se na úvodní stránku nebo prohlédněte náš magazín.',
+    home: 'Na úvodní stránku',
+    magazine: 'Prohlížet magazín',
+  },
+  ru: {
+    code: 'Ошибка 404',
+    title: 'Страница не найдена',
+    body: 'Запрашиваемая страница не существует или была перемещена. Вернитесь на главную страницу или просмотрите наш журнал.',
+    home: 'На главную',
+    magazine: 'Просмотреть журнал',
+  },
+}
+
+const acceptLang = Astro.request.headers.get('accept-language') ?? ''
+const detected = (['de', 'en', 'cs', 'ru'] as const).find((l) => acceptLang.toLowerCase().startsWith(l))
+const locale = detected ?? 'de'
+const l = labels[locale]
+const magazineSlugs = { de: 'magazin', en: 'magazine', cs: 'magazin', ru: 'zhurnal' }
+---
+<Base title={`${l.code} — Marienbad.com`} description={l.title} locale={locale}>
+  <main style="min-height:100vh;background:#FAF6EE;display:flex;align-items:center;justify-content:center;padding:80px 40px;">
+    <div style="max-width:560px;text-align:center;">
+      <div style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#8BD3E6;font-weight:700;margin-bottom:16px;">{l.code}</div>
+      <h1 style="font-size:clamp(48px,6vw,80px);font-weight:700;color:#004F71;line-height:1.05;letter-spacing:-0.015em;margin:0 0 24px;">{l.title}</h1>
+      <p style="font-size:18px;color:#33728D;line-height:1.6;margin:0 0 40px;">{l.body}</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href={`/${locale}/`} style="display:inline-flex;align-items:center;gap:8px;background:#004F71;color:#fff;font-size:14px;font-weight:700;padding:14px 28px;border-radius:4px;text-decoration:none;">
+          {l.home}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
+        </a>
+        <a href={`/${locale}/${magazineSlugs[locale]}`} style="display:inline-flex;align-items:center;gap:8px;background:transparent;color:#004F71;font-size:14px;font-weight:700;padding:14px 28px;border-radius:4px;text-decoration:none;border:1.5px solid #004F71;">
+          {l.magazine}
+        </a>
+      </div>
+    </div>
+  </main>
+</Base>

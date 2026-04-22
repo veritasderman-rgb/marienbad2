@@ -1,0 +1,90 @@
+---
+import type { Locale } from '../i18n/config'
+import type { Hotel } from '../data/hotels'
+import PillarPage from './PillarPage.astro'
+
+interface Props {
+  locale: Locale
+  hotel: Hotel
+  breadcrumbs: Array<{ label: string; href?: string }>
+}
+
+const { locale, hotel, breadcrumbs } = Astro.props
+
+const tagline = hotel.tagline[locale] ?? hotel.tagline.de
+const description = hotel.description[locale] ?? hotel.description.de
+const features = hotel.features[locale] ?? hotel.features.de
+const treatments = hotel.treatments[locale] ?? hotel.treatments.de
+const bookingUrl = hotel.bookingUrls[locale] ?? hotel.bookingUrl
+
+const hotelSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  name: hotel.name,
+  description: tagline,
+  url: bookingUrl,
+  starRating: { '@type': 'Rating', ratingValue: hotel.stars },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: hotel.address.split(',')[0]?.trim(),
+    addressLocality: 'Mariánské Lázně',
+    addressCountry: 'CZ',
+  },
+  amenityFeature: features.slice(0, 10).map((f) => ({ '@type': 'LocationFeatureSpecification', name: f })),
+}
+
+const labels = {
+  de: { stars: 'Sterne', year: 'Erbaut', style: 'Stil', features: 'Ausstattung', treatments: 'Behandlungen', book: 'Auf ensanahotels.com buchen', address: 'Adresse' },
+  en: { stars: 'stars', year: 'Built', style: 'Style', features: 'Features', treatments: 'Treatments', book: 'Book on ensanahotels.com', address: 'Address' },
+  cs: { stars: 'hvězdy', year: 'Postaveno', style: 'Styl', features: 'Vybavení', treatments: 'Procedury', book: 'Rezervovat na ensanahotels.com', address: 'Adresa' },
+  ru: { stars: 'звёзды', year: 'Построен', style: 'Стиль', features: 'Особенности', treatments: 'Процедуры', book: 'Забронировать на ensanahotels.com', address: 'Адрес' },
+}
+const l = labels[locale]
+---
+<PillarPage locale={locale} title={hotel.name} eyebrow={`${hotel.stars}★ · ${hotel.style}`} coverTone="colonnade" breadcrumbs={breadcrumbs} schema={hotelSchema}>
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;margin-bottom:32px;font-size:14px;color:#33728D;">
+    <span style="display:inline-flex;align-items:center;gap:4px;">
+      <span style="color:#E4C158;font-size:18px;">{'★'.repeat(hotel.stars)}</span>
+      <span>{hotel.stars} {l.stars}</span>
+    </span>
+    <span>·</span>
+    <span><strong style="color:#004F71;">{l.year}:</strong> {hotel.yearBuilt}</span>
+    <span>·</span>
+    <span><strong style="color:#004F71;">{l.style}:</strong> {hotel.style}</span>
+  </div>
+
+  <p style="font-size:22px;line-height:1.5;color:#004F71;font-weight:350;font-style:italic;margin:0 0 40px;padding:24px;background:#F6F1E8;border-left:4px solid #8BD3E6;border-radius:4px;">
+    {tagline}
+  </p>
+
+  <p style="font-size:17px;line-height:1.7;color:#33728D;margin:0 0 48px;">{description}</p>
+
+  <h2 style="font-size:28px;font-weight:700;color:#004F71;margin:48px 0 20px;">{l.features}</h2>
+  <ul style="margin:0 0 48px;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+    {features.map((f) => (
+      <li style="position:relative;padding:12px 16px 12px 36px;background:#FAF6EE;border-radius:6px;font-size:15px;color:#33728D;line-height:1.5;">
+        <span style="position:absolute;left:12px;top:14px;color:#8BD3E6;font-weight:700;">✓</span>
+        {f}
+      </li>
+    ))}
+  </ul>
+
+  <h2 style="font-size:28px;font-weight:700;color:#004F71;margin:48px 0 20px;">{l.treatments}</h2>
+  <ul style="margin:0 0 48px;padding:0 0 0 24px;">
+    {treatments.map((t) => (
+      <li style="font-size:16px;color:#33728D;line-height:1.7;">{t}</li>
+    ))}
+  </ul>
+
+  <div style="margin-top:56px;padding:32px;background:#004F71;color:#fff;border-radius:8px;display:flex;flex-direction:column;gap:16px;">
+    <div>
+      <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#8BD3E6;font-weight:600;margin-bottom:8px;">{l.address}</div>
+      <div style="font-size:16px;color:rgba(255,255,255,0.85);">{hotel.address}</div>
+    </div>
+    <a href={bookingUrl} target="_blank" rel="noopener"
+       style="display:inline-flex;align-items:center;justify-content:space-between;background:#8BD3E6;color:#004F71;font-size:15px;font-weight:700;padding:16px 24px;border-radius:4px;text-decoration:none;max-width:400px;">
+      <span>{l.book}</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</PillarPage>

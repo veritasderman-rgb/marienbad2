@@ -29,6 +29,7 @@ interface Props {
   headings?: Heading[]
   relatedCategory?: string
   showRelated?: boolean
+  schema?: object
 }
 
 const {
@@ -42,11 +43,12 @@ const {
   headings = [],
   relatedCategory,
   showRelated = false,
+  schema,
 } = Astro.props
 
 const hasToc = headings.length > 0
 ---
-<Base title={title} description={description} locale={locale}>
+<Base title={title} description={description} locale={locale} schema={schema}>
   <Nav locale={locale} />
   {breadcrumbs.length > 0 && <Breadcrumbs crumbs={breadcrumbs} />}
 

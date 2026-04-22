@@ -1,7 +1,15 @@
 ---
-import PillarPage from '../../../components/PillarPage.astro'
+import { hotels } from '../../../data/hotels'
+import HotelDetail from '../../../components/HotelDetail.astro'
+
+const locale = 'de' as const
+const hotel = hotels.find((h) => h.slug === 'pacifik')
+if (!hotel) throw new Error('Hotel not found: pacifik')
+
+const breadcrumbs = [
+  { label: 'Start', href: '/de/' },
+  { label: 'Hotels', href: '/de/unterkunft' },
+  { label: hotel.name },
+]
 ---
-<PillarPage locale="de" title="Pacifik" eyebrow="Hotels" coverTone="forest"
-  breadcrumbs={[{label:'Start',href:'/de/'},{label:'Hotels',href:'/de/unterkunft'},{label:'Pacifik'}]}>
-  <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>
-</PillarPage>
+<HotelDetail locale={locale} hotel={hotel} breadcrumbs={breadcrumbs} />
