@@ -1,10 +1,13 @@
 ---
+import { getEntry } from 'astro:content'
 import PillarPage from '../../components/PillarPage.astro'
 import TreatmentQuiz from '../../components/TreatmentQuiz.tsx'
 import { hotels } from '../../data/hotels'
 import { t } from '../../i18n/ui'
 
 const locale = 'de' as const
+const entry = await getEntry('pages', 'de-mineralquellen')
+const Content = entry ? (await entry.render()).Content : null
 
 const quizHotels = hotels.map((h) => ({
   slug: h.slug,
@@ -47,10 +50,12 @@ const quizTranslations = {
   noResults: t(locale, 'quiz.noResults'),
   starsLabel: t(locale, 'quiz.starsLabel'),
 }
+
+const title = entry?.data.title ?? 'Mineralquellen'
 ---
-<PillarPage locale="de" title="Mineralquellen" eyebrow="Heilquellen & Kuren" coverTone="water"
-  breadcrumbs={[{label:'Start',href:'/de/'},{label:'Heilquellen',href:'/de/mineralquellen'},{label:'Mineralquellen'}]}>
-  <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>
+<PillarPage locale="de" title={title} description={entry?.data.metaDescription} eyebrow="Heilquellen & Kuren" coverTone="water"
+  breadcrumbs={[{label:'Start',href:'/de/'},{label:'Heilquellen',href:'/de/mineralquellen'},{label:title}]}>
+  {Content ? <Content /> : <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>}
 
   <section style="margin-top:64px;padding-top:48px;border-top:1px solid #E8DFCB;">
     <TreatmentQuiz client:visible locale={locale} hotels={quizHotels} translations={quizTranslations} />

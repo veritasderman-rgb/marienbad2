@@ -1,7 +1,10 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
+import { getEntry } from 'astro:content'
+const entry = await getEntry('pages', 'en-history')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="en" title="History" eyebrow="About the town" coverTone="colonnade"
   breadcrumbs={[{label:'Home',href:'/en/'},{label:'History',href:'/en/history'},{label:'History'}]}>
-  <p>Content to follow. This page will be populated with Ensana content.</p>
+  {Content ? <Content /> : <p>Content to follow. This page will be populated with Ensana content.</p>}
 </PillarPage>

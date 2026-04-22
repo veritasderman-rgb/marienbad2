@@ -3,9 +3,8 @@ import PillarPage from '../../components/PillarPage.astro'
 import ItineraryFilter from '../../components/ItineraryFilter.tsx'
 import itinerariesData from '../../content/itineraries/data.json'
 import { t } from '../../i18n/ui'
-
+import { getEntry } from 'astro:content'
 const locale = 'de' as const
-
 const itineraryTranslations = {
   title: t(locale, 'itinerary.title'),
   subtitle: t(locale, 'itinerary.subtitle'),
@@ -18,10 +17,12 @@ const itineraryTranslations = {
   treatmentLabel: t(locale, 'itinerary.treatmentLabel'),
   detailsLink: t(locale, 'itinerary.detailsLink'),
 }
+const entry = await getEntry('pages', 'de-praktische-infos')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="de" title="Praktische Infos" eyebrow="Praktisches" coverTone="warm"
   breadcrumbs={[{label:'Start',href:'/de/'},{label:'Praktisches',href:'/de/praktische-infos'},{label:'Praktische Infos'}]}>
-  <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>
+  {Content ? <Content /> : <p>Inhalt folgt. Diese Seite wird mit Ensana-Inhalten befüllt.</p>}
 
   <section style="margin-top:64px;padding-top:48px;border-top:1px solid #E8DFCB;">
     <ItineraryFilter client:visible locale={locale} translations={itineraryTranslations} cmsData={itinerariesData} />

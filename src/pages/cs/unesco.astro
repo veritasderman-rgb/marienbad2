@@ -1,7 +1,10 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
+import { getEntry } from 'astro:content'
+const entry = await getEntry('pages', 'cs-unesco')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="cs" title="UNESCO" eyebrow="O městě" coverTone="colonnade"
   breadcrumbs={[{label:'Úvod',href:'/cs/'},{label:'Historie',href:'/cs/historie'},{label:'UNESCO'}]}>
-  <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>
+  {Content ? <Content /> : <p>Obsah bude doplněn. Tato stránka bude naplněna obsahem Ensana.</p>}
 </PillarPage>

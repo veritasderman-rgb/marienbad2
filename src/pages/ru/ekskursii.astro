@@ -1,7 +1,10 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
+import { getEntry } from 'astro:content'
+const entry = await getEntry('pages', 'ru-ekskursii')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="ru" title="Экскурсии" eyebrow="Активности" coverTone="forest"
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Активности',href:'/ru/chem-zanyatsya'},{label:'Экскурсии'}]}>
-  <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>
+  {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>

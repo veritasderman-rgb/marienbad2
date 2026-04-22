@@ -1,7 +1,10 @@
 ---
 import PillarPage from '../../components/PillarPage.astro'
+import { getEntry } from 'astro:content'
+const entry = await getEntry('pages', 'ru-luchshee-vremya')
+const Content = entry ? (await entry.render()).Content : null
 ---
 <PillarPage locale="ru" title="Лучшее время для визита" eyebrow="Практическое" coverTone="forest"
   breadcrumbs={[{label:'Главная',href:'/ru/'},{label:'Практическое',href:'/ru/prakticheskaya-informaciya'},{label:'Лучшее время для визита'}]}>
-  <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>
+  {Content ? <Content /> : <p>Содержание будет добавлено. Эта страница будет наполнена контентом Ensana.</p>}
 </PillarPage>
