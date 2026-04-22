@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css'
 import type { Locale } from '../i18n/config'
+import { t } from '../i18n/ui'
+import ChatWidget from '../components/ChatWidget.tsx'
 
 interface Props {
   title: string
@@ -14,6 +16,15 @@ const { title, description, locale, canonicalUrl, ogImage } = Astro.props
 const siteUrl = 'https://marienbad2.vercel.app'
 const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`
 const og = ogImage ?? `${siteUrl}/images/og-default.jpg`
+
+const locales: Locale[] = ['de', 'en', 'cs', 'ru']
+const pathWithoutLocale = Astro.url.pathname.replace(/^\/[a-z]{2}\//, '/')
+const hreflangs = locales.map((l) => ({
+  lang: l,
+  href: `${siteUrl}/${l}${pathWithoutLocale}`,
+}))
+
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN
 ---
 <!doctype html>
 <html lang={locale} dir="ltr">
@@ -24,7 +35,9 @@ const og = ogImage ?? `${siteUrl}/images/og-default.jpg`
   {description && <meta name="description" content={description} />}
   <link rel="canonical" href={canonical} />
 
-  <!-- Open Graph -->
+  {hreflangs.map((h) => <link rel="alternate" hreflang={h.lang} href={h.href} />)}
+  <link rel="alternate" hreflang="x-default" href={`${siteUrl}/de${pathWithoutLocale}`} />
+
   <meta property="og:title" content={title} />
   {description && <meta property="og:description" content={description} />}
   <meta property="og:image" content={og} />
@@ -32,15 +45,29 @@ const og = ogImage ?? `${siteUrl}/images/og-default.jpg`
   <meta property="og:type" content="website" />
   <meta property="og:locale" content={locale} />
 
-  <!-- Font preload (critical weights) -->
   <link rel="preload" href="/fonts/Branding-Medium.otf" as="font" type="font/otf" crossorigin />
   <link rel="preload" href="/fonts/Branding-Bold.otf" as="font" type="font/otf" crossorigin />
   <link rel="preload" href="/fonts/Branding-Semilight.otf" as="font" type="font/otf" crossorigin />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/images/logo-ensana-indigo.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  {plausibleDomain && <script defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js"></script>}
 </head>
 <body>
+  <a href="#main" style="position:absolute;left:-9999px;top:0;background:#004F71;color:#fff;padding:12px 20px;z-index:9999;" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">
+    {t(locale, 'common.backTo')}
+  </a>
   <slot />
+  <ChatWidget
+    client:idle
+    locale={locale}
+    translations={{
+      title: t(locale, 'chat.title'),
+      placeholder: t(locale, 'chat.placeholder'),
+      greeting: t(locale, 'chat.greeting'),
+      disclaimer: t(locale, 'chat.disclaimer'),
+    }}
+  />
 </body>
 </html>
