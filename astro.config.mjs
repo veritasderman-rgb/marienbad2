@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config'
 import mdx from '@astrojs/mdx'
+import markdoc from '@astrojs/markdoc'
 import sitemap from '@astrojs/sitemap'
 import vercel from '@astrojs/vercel'
 import react from '@astrojs/react'
@@ -14,6 +15,7 @@ export default defineConfig({
     react(),
     keystatic(),
     mdx(),
+    markdoc(),
     sitemap({
       filter: (page) => !page.includes('/admin') && !page.includes('/keystatic'),
       serialize: (item) => {
